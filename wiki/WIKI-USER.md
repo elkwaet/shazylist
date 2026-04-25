@@ -10,26 +10,34 @@ Bienvenue dans le guide utilisateur de Shazylist.
    ```bash
    python3 app.py
    ```
-4. Accédez à l'interface via votre navigateur : [http://127.0.0.1:5000](http://127.0.0.1:5000)
+4. Accédez à l'interface via votre navigateur : [http://127.0.0.1:5050](http://127.0.0.1:5050)
 
 ## 🎧 Fonctionnalités
 
-### Dashboard Web
-- **Consultation** : Visualisez vos Shazams avec pochette, date et source (Auto ou Manuel).
-- **Hits (🔥)** : Identifiez les morceaux que vous avez tagués plusieurs fois.
-- **Recherche** : Filtrez instantanément par artiste ou titre via la barre de recherche.
+### Dashboard Web (Command Center)
+- **Sticky Header** : La barre de contrôle reste fixée en haut lors du défilement.
+- **Tri Dynamique** : Cliquez sur les en-têtes **Date** ou **Hits** pour trier votre collection.
+- **Thèmes** : Basculez entre le mode **Sombre** 🌙 et **Clair** ☀️ via l'icône dans le header.
+- **Stats Flash** : Un résumé en temps réel (Total, Top Artiste, Ratio Auto) s'affiche sous les filtres.
+
+### Filtrage Avancé
+- **Recherche (Raccourci `F`)** : Filtrez instantanément par artiste ou titre. Appuyez sur `ESC` pour effacer.
+- **Dates** : Définissez une plage précise ou utilisez les raccourcis **Aujourd'hui**, **Hier**, **Semaine**.
+- **Source** : Filtrez entre **Auto-shazam** 🚀 (sessions automatiques) et **Solo-shazam** 👤 (tags manuels).
+- **Sessions** : Les morceaux sont séparés visuellement si plus de 10 minutes les séparent.
 
 ### Recherche DJ
-Cliquez sur les liens à droite de chaque morceau pour ouvrir directement une recherche sur :
-- **Beatport**
-- **Traxsource**
-- **Juno Download**
-- **YouTube**
+Cliquez sur les liens à droite de chaque morceau pour ouvrir une recherche sur :
+- **Beatport (BP)**
+- **Traxsource (TX)**
+- **Juno Download (JN)**
+- **YouTube (YT)**
+- **Google (G)**
 
 ### Exports
-- **CSV** : Un export complet exploitable dans Excel ou Rekordbox.
-- **TXT** : Une liste épurée (N° - Titre - Artiste) pour vos notes de mix.
+- **CSV** : Un export complet respectant vos filtres de dates.
+- **TXT** : Une liste épurée (N° - Titre - Artiste) pour vos tracklists.
 
 ## ⚠️ Notes importantes
-- Assurez-vous que l'application Shazam est installée et utilisée sur votre Mac.
-- Si la base de données n'est pas trouvée, vérifiez que vous avez autorisé l'accès au disque.
+- **Port 5050** : Shazylist utilise le port 5050 pour éviter les conflits avec AirPlay sur macOS.
+- **Accès Disque** : L'application lit la base de données locale de Shazam. Si rien ne s'affiche, vérifiez les permissions.
