@@ -19,6 +19,8 @@
         <symbol id="icon-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"></path><path d="m7 9 5-5 5 5"></path></symbol>
         <symbol id="icon-sort-asc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"></path></symbol>
         <symbol id="icon-sort-desc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></symbol>
     </svg>
 
     <header class="sticky-header">
@@ -29,6 +31,9 @@
                     <h1>Shazylist</h1>
                 </div>
                 <div class="header-right">
+                    <button id="theme-toggle" class="theme-toggle" title="Changer de thème">
+                        <svg class="icon-svg"><use xlink:href="#icon-sun"></use></svg>
+                    </button>
                     <div class="status" id="status">Chargement...</div>
                     <div class="actions">
                         <a href="/export/csv" class="btn-export">CSV</a>
@@ -50,6 +55,12 @@
                         <label>Au</label>
                         <input type="date" id="date-end">
                     </div>
+                    <div class="date-shortcuts">
+                        <button class="shortcut-btn" data-range="today">Aujourd'hui</button>
+                        <button class="shortcut-btn" data-range="yesterday">Hier</button>
+                        <button class="shortcut-btn" data-range="week">Semaine</button>
+                        <button class="shortcut-btn" data-range="all">Tout</button>
+                    </div>
                 </div>
                 <div class="filters">
                     <button class="filter-btn active" data-filter="all">Tous</button>
@@ -59,6 +70,22 @@
                     <button class="filter-btn" data-filter="manual">
                         <svg class="icon-btn"><use xlink:href="#icon-solo"></use></svg> Solo
                     </button>
+            </div>
+
+            <div class="stats-bar" id="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">Total :</span>
+                    <span class="stat-value" id="stat-total">-</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-label">Top Artiste :</span>
+                    <span class="stat-value" id="stat-artist">-</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-label">Ratio Auto :</span>
+                    <span class="stat-value" id="stat-ratio">-</span>
                 </div>
             </div>
         </div>

@@ -2,6 +2,28 @@ let allTracks = [];
 let currentFilter = 'all';
 let sortConfig = { field: 'date', direction: 'desc' };
 
+// Theme Management
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        updateThemeIcon(true);
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    updateThemeIcon(isLight);
+}
+
+function updateThemeIcon(isLight) {
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.innerHTML = `<svg class="icon-svg"><use xlink:href="${isLight ? '#icon-moon' : '#icon-sun'}"></use></svg>`;
+    }
+}
+
 async function fetchTracks() {
     const statusEl = document.getElementById('status');
     const start = document.getElementById('date-start').value;
@@ -27,6 +49,7 @@ async function fetchTracks() {
 
         statusEl.textContent = `${allTracks.length} morceaux filtrés`;
         sortAndRender();
+        updateStats();
     } catch (error) {
         statusEl.textContent = 'Erreur de connexion au serveur';
         console.error(error);
@@ -71,10 +94,24 @@ function renderTable(tracks) {
 
     body.innerHTML = '';
     
-    filtered.forEach(track => {
+    let prevDate = null;
+
+    filtered.forEach((track, index) => {
+        if (sortConfig.field === 'date' && prevDate) {
+            const currentD = new Date(track.date);
+            const prevD = new Date(prevDate);
+            const diffMins = Math.abs(currentD - prevD) / (1000 * 60);
+            
+            if (diffMins > 10) {
+                const separator = document.createElement('tr');
+                separator.className = 'session-separator';
+                separator.innerHTML = `<td colspan="6"></td>`;
+                body.appendChild(separator);
+            }
+        }
+        prevDate = track.date;
+
         const tr = document.createElement('tr');
-        
-        // Icone Hits (Flame)
         const hitIcon = `<svg class="icon-inline"><use xlink:href="#icon-flame"></use></svg>`;
         const hitLabel = track.hits > 1 ? `<span class="hits-badge">${hitIcon} ${track.hits}</span>` : '1';
         
@@ -103,15 +140,74 @@ function renderTable(tracks) {
     });
 }
 
+function updateStats() {
+    if (allTracks.length === 0) {
+        document.getElementById('stat-total').textContent = '0';
+        document.getElementById('stat-artist').textContent = '-';
+        document.getElementById('stat-ratio').textContent = '-';
+        return;
+    }
+
+    document.getElementById('stat-total').textContent = allTracks.length;
+
+    const artistCounts = {};
+    let topArtist = "-";
+    let maxCount = 0;
+    
+    allTracks.forEach(t => {
+        artistCounts[t.artist] = (artistCounts[t.artist] || 0) + 1;
+        if (artistCounts[t.artist] > maxCount) {
+            maxCount = artistCounts[t.artist];
+            topArtist = t.artist;
+        }
+    });
+    document.getElementById('stat-artist').textContent = topArtist;
+
+    const autoCount = allTracks.filter(t => t.type.includes('Auto')).length;
+    const ratio = Math.round((autoCount / allTracks.length) * 100);
+    document.getElementById('stat-ratio').textContent = `${ratio}%`;
+}
+
 // Event Listeners
 document.getElementById('search').addEventListener('input', () => renderTable(allTracks));
 document.getElementById('date-start').addEventListener('change', fetchTracks);
 document.getElementById('date-end').addEventListener('change', fetchTracks);
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+document.querySelectorAll('.shortcut-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const range = btn.dataset.range;
+        const startInput = document.getElementById('date-start');
+        const endInput = document.getElementById('date-end');
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        
+        if (range === 'today') {
+            startInput.value = today;
+            endInput.value = today;
+        } else if (range === 'yesterday') {
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            const yStr = yesterday.toISOString().split('T')[0];
+            startInput.value = yStr;
+            endInput.value = yStr;
+        } else if (range === 'week') {
+            const lastWeek = new Date(now);
+            lastWeek.setDate(now.getDate() - 7);
+            startInput.value = lastWeek.toISOString().split('T')[0];
+            endInput.value = today;
+        } else if (range === 'all') {
+            startInput.value = '';
+            endInput.value = '';
+        }
+        fetchTracks();
+    });
+});
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active'); // Utiliser currentTarget pour éviter l'élément interne (SVG)
+        e.currentTarget.classList.add('active');
         currentFilter = e.currentTarget.dataset.filter;
         renderTable(allTracks);
     });
@@ -126,19 +222,30 @@ document.querySelectorAll('th.sortable').forEach(th => {
             sortConfig.field = field;
             sortConfig.direction = 'desc';
         }
-        
-        // Mettre à jour l'UI des icônes de tri (SVG)
         document.querySelectorAll('.icon-sort').forEach(icon => {
             icon.innerHTML = `<use xlink:href="#icon-sort"></use>`;
         });
-        
         const currentIcon = th.querySelector('.icon-sort');
         const iconId = sortConfig.direction === 'asc' ? '#icon-sort-asc' : '#icon-sort-desc';
         currentIcon.innerHTML = `<use xlink:href="${iconId}"></use>`;
-        
         sortAndRender();
     });
 });
 
-// Initial Fetch
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const search = document.getElementById('search');
+        if (search.value) {
+            search.value = '';
+            renderTable(allTracks);
+        }
+    }
+    if (e.key === 'f' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        document.getElementById('search').focus();
+    }
+});
+
+// Initial Init
+initTheme();
 fetchTracks();
