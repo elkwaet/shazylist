@@ -79,7 +79,7 @@ class Shazylist:
                 "hits": hits,
                 "artist": artist,
                 "title": title,
-                "type": "🚀 Auto-shazam" if is_auto else "👤 Solo-shazam",
+                "type": "Auto-shazam" if is_auto else "Solo-shazam",
                 "style": style or "-",
                 "cover": cover_url or "https://www.shazam.com/resources/9672688b56d3c01570776b7e5436c646b9a89667/vendor/shazam/shazam-web-ui-core-assets/dist/assets/images/no-cover-art.png",
                 "links": {

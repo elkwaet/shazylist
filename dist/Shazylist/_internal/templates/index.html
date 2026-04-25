@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shazylist - Dashboard DJ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dark-theme">
+    <svg style="display: none;">
+        <symbol id="icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></symbol>
+        <symbol id="icon-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></symbol>
+        <symbol id="icon-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-3 3-3-3M9 6l3-3 3 3M12 3v18"></path></symbol>
+        <symbol id="icon-sort-asc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"></path></symbol>
+        <symbol id="icon-sort-desc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5h10M11 9h7M11 13h4M3 7l3-3 3 3M6 20V4"></path></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></symbol>
+        <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></symbol>
+    </svg>
+
+    <header class="sticky-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <svg class="icon-svg"><use xlink:href="#icon-logo"></use></svg>
+                    <h1>Shazylist</h1>
+                </div>
+
+                <div class="search-box-container">
+                    <input type="text" id="search" placeholder="Rechercher... (f)">
+                </div>
+
+                <div class="header-right">
+                    <div class="status-minimal" id="status">Chargement...</div>
+                    <button id="theme-toggle" class="icon-btn-ui" title="Thème">
+                        <svg class="icon-svg"><use xlink:href="#icon-sun"></use></svg>
+                    </button>
+                    <button id="settings-toggle" class="icon-btn-ui" title="Réglages">
+                        <svg class="icon-svg"><use xlink:href="#icon-settings"></use></svg>
+                    </button>
+                    <div class="export-group">
+                        <a href="/export/csv" class="btn-export">CSV</a>
+                        <a href="/export/txt" class="btn-export">TXT</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="date-filter">
+                        <input type="date" id="date-start">
+                        <span class="sep">→</span>
+                        <input type="date" id="date-end">
+                    </div>
+                    
+                    <div class="shortcuts">
+                        <button class="shortcut-btn" data-range="today">Aujourd'hui</button>
+                        <button class="shortcut-btn" data-range="yesterday">Hier</button>
+                        <button class="shortcut-btn" data-range="week">Semaine</button>
+                        <button class="shortcut-btn" data-range="all">Tout</button>
+                    </div>
+                </div>
+
+                <div class="toolbar-center">
+                    <div class="source-filters">
+                        <button class="filter-btn active" data-filter="all">Tous</button>
+                        <button class="filter-btn" data-filter="auto">🚀 Auto</button>
+                        <button class="filter-btn" data-filter="solo">👤 Solo</button>
+                    </div>
+                    <label class="checkbox-filter">
+                        <input type="checkbox" id="hide-owned">
+                        <span>Cacher possédés</span>
+                    </label>
+                </div>
+
+                <div class="toolbar-right">
+                    <div class="mini-stats">
+                        <div class="m-stat"><span class="m-val" id="stat-total">-</span> <span class="m-lab">TRACKS</span></div>
+                        <div class="m-stat"><span class="m-val" id="stat-artist">-</span> <span class="m-lab">TOP</span></div>
+                        <div class="m-stat"><span class="m-val" id="stat-ratio">-</span> <span class="m-lab">AUTO</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="tracks-card">
+            <table id="tracks-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="date">DATE <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg></th>
+                        <th class="sortable" data-sort="hits">HITS <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg></th>
+                        <th>COVER</th>
+                        <th>ARTISTE / TITRE</th>
+                        <th>GENRE</th>
+                        <th>RECHERCHE</th>
+                    </tr>
+                </thead>
+                <tbody id="tracks-body"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Réglages Scan Local</h2>
+                <button id="close-settings" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="settings-desc">Ajoutez vos dossiers de musique pour identifier les Shazams que vous possédez déjà.</p>
+                <div id="folder-list" class="folder-list"></div>
+                <div class="add-folder-box">
+                    <input type="text" id="new-folder-path" placeholder="/Chemin/vers/ma/musique">
+                    <button id="pick-folder-btn" class="btn-secondary" title="Parcourir...">📂</button>
+                    <button id="add-folder-btn" class="btn-primary"><svg class="icon-btn"><use xlink:href="#icon-plus"></use></svg> Ajouter</button>
+                </div>
+            </div>
+            <div class="modal-footer"><button id="save-settings" class="btn-save">Enregistrer & Scanner</button></div>
+        </div>
+    </div>
+
+    <div id="tcc-modal" class="modal">
+        <div class="modal-content tcc-content">
+            <div class="modal-header">
+                <h2><svg class="icon-ui-shield"><use xlink:href="#icon-shield"></use></svg> Accès requis</h2>
+            </div>
+            <div class="modal-body">
+                <p>Pour afficher vos morceaux, <strong>Shazylist</strong> doit pouvoir lire la base de données locale de Shazam.</p>
+                <div class="tcc-steps">
+                    <div class="step"><span class="step-num">1</span><p>Ouvrez les <strong>Réglages Système</strong>.</p></div>
+                    <div class="step"><span class="step-num">2</span><p>Allez dans <strong>Confidentialité et sécurité</strong> > <strong>Accès complet au disque</strong>.</p></div>
+                    <div class="step"><span class="step-num">3</span><p>Cochez <strong>Shazylist</strong> (ou votre Terminal).</p></div>
+                </div>
+                <div class="tcc-alert">⚠️ Une fois autorisé, redémarrez l'application.</div>
+            </div>
+            <div class="modal-footer"><button id="open-tcc-settings" class="btn-primary">Ouvrir les Réglages</button></div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 Shazylist.</p></footer>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
