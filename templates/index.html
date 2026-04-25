@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shazylist - DJ Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <span class="icon">🎧</span>
+                <h1>Shazylist</h1>
+            </div>
+            <div class="actions">
+                <a href="/export/csv" class="btn-export">Exporter CSV</a>
+                <a href="/export/txt" class="btn-export">Exporter TXT</a>
+            </div>
+            <div class="status" id="status">Chargement...</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Rechercher un artiste ou un titre...">
+            </div>
+            <div class="date-filters">
+                <div class="input-group">
+                    <label>Du</label>
+                    <input type="date" id="date-start">
+                </div>
+                <div class="input-group">
+                    <label>Au</label>
+                    <input type="date" id="date-end">
+                </div>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="auto">🚀 Auto-shazam</button>
+                <button class="filter-btn" data-filter="manual">👤 Solo-shazam</button>
+            </div>
+        </section>
+
+        <section class="table-container">
+            <table id="tracks-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Hits</th>
+                        <th>Cover</th>
+                        <th>Artiste / Titre</th>
+                        <th>Genre</th>
+                        <th>Recherche</th>
+                    </tr>
+                </thead>
+                <tbody id="tracks-body">
+                    <!-- Les morceaux seront insérés ici par JS -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Shazylist.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+
+</html>

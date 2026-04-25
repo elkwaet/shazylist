@@ -2,12 +2,14 @@
 
 Toutes les modifications notables de ce projet seront documentées dans ce fichier.
 
-## [1.1.0] - 2026-04-25
+## [2.0.0] - 2026-04-25
 
 ### ADD
-- Analyse de fréquence : calcul du nombre d'occurrences (**Hits**) par morceau.
-- Badge visuel 🔥 dans le Dashboard pour les morceaux récurrents.
-- Colonne `hits` dans l'export CSV.
-- Correction du schéma SQLite pour compatibilité macOS Sonoma/Ventura.
+- Transition vers une **Web App locale** (Lite App) avec Flask.
+- Interface moderne "Premium" Noir & Blanc (Montserrat).
+- Affichage des **pochettes d'albums** (Covers).
+- Liens de recherche étendus : **Traxsource**, **Juno Download**, **YouTube**.
+- Boutons d'export directs : **CSV** (complet) et **TXT** (liste formatée pour DJ).
+- Filtrage instantané et barre de recherche.
 
-## [1.0.0] - 2026-04-25
+## [1.1.0] - 2026-04-25
