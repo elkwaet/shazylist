@@ -1,5 +1,6 @@
 let allTracks = [];
 let currentFilter = 'all';
+let sortConfig = { field: 'date', direction: 'desc' };
 
 async function fetchTracks() {
     const statusEl = document.getElementById('status');
@@ -8,7 +9,6 @@ async function fetchTracks() {
     
     statusEl.textContent = 'Mise à jour des Shazams...';
 
-    // Mise à jour des liens d'export pour inclure les filtres de date
     const exportCsv = document.querySelector('a[href*="/export/csv"]');
     const exportTxt = document.querySelector('a[href*="/export/txt"]');
     
@@ -26,18 +26,35 @@ async function fetchTracks() {
         }
 
         statusEl.textContent = `${allTracks.length} morceaux filtrés`;
-        renderTable(allTracks);
+        sortAndRender();
     } catch (error) {
         statusEl.textContent = 'Erreur de connexion au serveur';
         console.error(error);
     }
 }
 
+function sortAndRender() {
+    allTracks.sort((a, b) => {
+        let valA = a[sortConfig.field];
+        let valB = b[sortConfig.field];
+
+        if (sortConfig.field === 'hits') {
+            valA = parseInt(valA);
+            valB = parseInt(valB);
+        }
+
+        if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    renderTable(allTracks);
+}
+
 function renderTable(tracks) {
     const body = document.getElementById('tracks-body');
     const searchTerm = document.getElementById('search').value.toLowerCase();
     
-    // Filtrage complémentaire côté client (Type et Search)
     let filtered = tracks;
     
     if (currentFilter !== 'all') {
@@ -56,7 +73,10 @@ function renderTable(tracks) {
     
     filtered.forEach(track => {
         const tr = document.createElement('tr');
-        const hitLabel = track.hits > 1 ? `<span class="hits-badge">🔥 ${track.hits}</span>` : '1';
+        
+        // Icone Hits (Flame)
+        const hitIcon = `<svg class="icon-inline"><use xlink:href="#icon-flame"></use></svg>`;
+        const hitLabel = track.hits > 1 ? `<span class="hits-badge">${hitIcon} ${track.hits}</span>` : '1';
         
         tr.innerHTML = `
             <td>
@@ -91,9 +111,32 @@ document.getElementById('date-end').addEventListener('change', fetchTracks);
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.dataset.filter;
+        e.currentTarget.classList.add('active'); // Utiliser currentTarget pour éviter l'élément interne (SVG)
+        currentFilter = e.currentTarget.dataset.filter;
         renderTable(allTracks);
+    });
+});
+
+document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+        const field = th.dataset.sort;
+        if (sortConfig.field === field) {
+            sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortConfig.field = field;
+            sortConfig.direction = 'desc';
+        }
+        
+        // Mettre à jour l'UI des icônes de tri (SVG)
+        document.querySelectorAll('.icon-sort').forEach(icon => {
+            icon.innerHTML = `<use xlink:href="#icon-sort"></use>`;
+        });
+        
+        const currentIcon = th.querySelector('.icon-sort');
+        const iconId = sortConfig.direction === 'asc' ? '#icon-sort-asc' : '#icon-sort-desc';
+        currentIcon.innerHTML = `<use xlink:href="${iconId}"></use>`;
+        
+        sortAndRender();
     });
 });
 
