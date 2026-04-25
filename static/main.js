@@ -159,7 +159,7 @@ function renderTable(tracks) {
     let filtered = tracks;
     
     if (currentFilter !== 'all') {
-        const filterType = currentFilter === 'auto' ? '🚀 Auto-shazam' : '👤 Solo-shazam';
+        const filterType = currentFilter === 'auto' ? 'Auto-shazam' : 'Solo-shazam';
         filtered = filtered.filter(t => t.type === filterType);
     }
 
