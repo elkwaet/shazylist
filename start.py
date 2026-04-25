@@ -41,54 +41,70 @@ class Shazylist:
             conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
             cursor = conn.cursor()
             
-            # 1. Extraction brute
+            # Extraction avec Cover Art
             query = """
-                SELECT ZTRACKNAME, ZSUBTITLE, ZDATE, ZISAUTO, ZSTYLE
+                SELECT ZTRACKNAME, ZSUBTITLE, ZDATE, ZISAUTO, ZSTYLE, ZALBUMARTURLSTRING
                 FROM ZSHTAGRESULTMO 
                 ORDER BY ZDATE DESC
             """
             cursor.execute(query)
             rows = cursor.fetchall()
             
-            # 2. Calcul des fréquences (Hits) sur l'ensemble de la DB
-            # On utilise (Artiste, Titre) comme clé unique
+            # Calcul des fréquences
             counts = Counter([(r[1], r[0]) for r in rows if r[0] and r[1]])
             
             self.tracks = []
             for row in rows:
-                title, artist, timestamp, is_auto, style = row
+                title, artist, timestamp, is_auto, style, cover_url = row
                 if not title or not artist:
                     continue
 
                 date_dt = self.mac_to_datetime(timestamp)
                 hits = counts.get((artist, title), 1)
                 
+                query_str = urllib.parse.quote(f"{artist} {title}")
+                
                 self.tracks.append({
                     "date": date_dt.strftime("%Y-%m-%d %H:%M") if date_dt else "N/A",
                     "hits": hits,
                     "artist": artist,
                     "title": title,
-                    "type": "🚀 Auto" if is_auto else "👤 Manual",
+                    "type": "🚀 Auto-shazam" if is_auto else "👤 Solo-shazam",
                     "style": style or "-",
-                    "search_google": f"https://www.google.com/search?q={urllib.parse.quote(f'{artist} {title}')}",
-                    "search_beatport": f"https://www.beatport.com/search?q={urllib.parse.quote(f'{artist} {title}')}"
+                    "cover": cover_url or "https://www.shazam.com/resources/9672688b56d3c01570776b7e5436c646b9a89667/vendor/shazam/shazam-web-ui-core-assets/dist/assets/images/no-cover-art.png",
+                    "links": {
+                        "google": f"https://www.google.com/search?q={query_str}",
+                        "beatport": f"https://www.beatport.com/search?q={query_str}",
+                        "traxsource": f"https://www.traxsource.com/search?term={query_str}",
+                        "junodownload": f"https://www.junodownload.com/search/?q={query_str}",
+                        "youtube": f"https://www.youtube.com/results?search_query={query_str}"
+                    }
                 })
             
             conn.close()
+            return self.tracks
         except sqlite3.Error as e:
             print(f"Erreur SQLite : {e}")
             raise
 
     def export_csv(self, filename="shazam_export.csv"):
         if not self.tracks:
-            print("⚠️ Aucun morceau à exporter.")
             return
         
-        keys = self.tracks[0].keys()
+        # Aplatir les liens pour le CSV
+        flattened = []
+        for t in self.tracks:
+            item = t.copy()
+            links = item.pop("links")
+            for k, v in links.items():
+                item[f"link_{k}"] = v
+            flattened.append(item)
+
+        keys = flattened[0].keys()
         with open(filename, 'w', newline='', encoding='utf-8') as f:
             dict_writer = csv.DictWriter(f, fieldnames=keys)
             dict_writer.writeheader()
-            dict_writer.writerows(self.tracks)
+            dict_writer.writerows(flattened)
         print(f"✅ CSV exporté ({len(self.tracks)} tracks) : {filename}")
 
     def export_markdown(self, filename="shazam_dashboard.md"):
@@ -98,15 +114,17 @@ class Shazylist:
         with open(filename, 'w', encoding='utf-8') as f:
             f.write("# 🎧 Shazylist - Dashboard DJ\n\n")
             f.write(f"*Généré le : {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n\n")
-            f.write("| Date | Hits | Source | Artiste | Titre | Recherche |\n")
-            f.write("| :--- | :--- | :--- | :--- | :--- | :--- |\n")
+            f.write("| Date | Hits | Source | Cover | Artiste | Titre | Recherche |\n")
+            f.write("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n")
             
             for track in self.tracks:
-                # Formatage du nombre de hits pour visibilité
                 hit_label = f"🔥 **{track['hits']}**" if track['hits'] > 1 else "1"
-                links = f"[Google]({track['search_google']}) / [Beatport]({track['search_beatport']})"
+                links = f"[BP]({track['links']['beatport']}) / [YT]({track['links']['youtube']})"
                 
-                f.write(f"| {track['date']} | {hit_label} | {track['type']} | **{track['artist']}** | {track['title']} | {links} |\n")
+                # Markdown img size hack (if supported by viewer)
+                img = f'<img src="{track["cover"]}" width="40" height="40">'
+                
+                f.write(f"| {track['date']} | {hit_label} | {track['type']} | {img} | **{track['artist']}** | {track['title']} | {links} |\n")
         
         print(f"✅ Dashboard Markdown créé : {filename}")
 
