@@ -6,16 +6,19 @@ let currentFolders = [];
 // Theme Management
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        updateThemeIcon(false);
+    } else {
+        document.body.classList.remove('dark-theme');
         updateThemeIcon(true);
     }
 }
 
 function toggleTheme() {
-    const isLight = document.body.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    updateThemeIcon(isLight);
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    updateThemeIcon(!isDark);
 }
 
 function updateThemeIcon(isLight) {
@@ -359,7 +362,25 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+// TCC Permissions
+async function checkAccess() {
+    try {
+        const response = await fetch('/api/access-status');
+        const data = await response.json();
+        if (data.status === 'denied' || data.status === 'missing') {
+            document.getElementById('tcc-modal').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Erreur checkAccess:', error);
+    }
+}
+
+document.getElementById('open-tcc-settings').addEventListener('click', async () => {
+    await fetch('/api/open-tcc');
+});
+
 // Initial Init
 initTheme();
 fetchTracks();
 loadSettings();
+checkAccess();

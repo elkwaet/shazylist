@@ -42,6 +42,21 @@ def get_tracks():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/access-status')
+def access_status():
+    db_path = shazam.db_path
+    if not db_path or not os.path.exists(db_path):
+        return jsonify({"status": "missing", "path": db_path})
+    
+    try:
+        with open(db_path, 'rb') as f:
+            f.read(10)
+        return jsonify({"status": "granted"})
+    except PermissionError:
+        return jsonify({"status": "denied", "path": db_path})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 @app.route('/api/pick-folder')
 def pick_folder():
     """Ouvre le sélecteur de dossier via AppleScript (ultra-stable sur macOS)."""
@@ -52,6 +67,16 @@ def pick_folder():
     except subprocess.CalledProcessError:
         # L'utilisateur a probablement annulé
         return jsonify({"path": None})
+
+@app.route('/api/open-tcc')
+def open_tcc():
+    """Ouvre directement la section Accès complet au disque sur macOS."""
+    script = 'osascript -e "tell application \\"System Settings\\" to reveal anchor \\"FullDiskAccess\\" of pane id \\"com.apple.Security-Settings.extension\\""'
+    try:
+        subprocess.run(script, shell=True)
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/settings', methods=['GET', 'POST'])
 def settings():
