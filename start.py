@@ -4,10 +4,11 @@ import os
 import glob
 from datetime import datetime, timedelta
 import urllib.parse
+from collections import Counter
 
 class Shazylist:
     def __init__(self):
-        # Chemins standards Shazam sur macOS (mis à jour selon diagnostic)
+        # Chemins standards Shazam sur macOS
         self.potential_paths = [
             os.path.expanduser("~/Library/Group Containers/4GWDBCF5A4.group.com.shazam/com.shazam.mac.Shazam/ShazamDataModel.sqlite"),
             os.path.expanduser("~/Library/Group Containers/K39M9S6R4P.com.shazam.mac.Shazam/ShazamDataModel.sqlite"),
@@ -30,7 +31,6 @@ class Shazylist:
         """Convertit le timestamp Core Data (Mac Absolute Time) en datetime Python."""
         if not timestamp:
             return None
-        # Mac Absolute Time commence le 01-01-2001
         return datetime(2001, 1, 1) + timedelta(seconds=timestamp)
 
     def fetch_tracks(self):
@@ -38,15 +38,10 @@ class Shazylist:
             raise FileNotFoundError("Base de données Shazam introuvable.")
 
         try:
-            # Mode lecture seule pour éviter de bloquer l'app Shazam
             conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
             cursor = conn.cursor()
             
-            # Schéma macOS récent : 
-            # ZTRACKNAME = Titre
-            # ZSUBTITLE = Artiste
-            # ZDATE = Timestamp
-            # ZISAUTO = 1 si Auto-Shazam
+            # 1. Extraction brute
             query = """
                 SELECT ZTRACKNAME, ZSUBTITLE, ZDATE, ZISAUTO, ZSTYLE
                 FROM ZSHTAGRESULTMO 
@@ -55,17 +50,22 @@ class Shazylist:
             cursor.execute(query)
             rows = cursor.fetchall()
             
+            # 2. Calcul des fréquences (Hits) sur l'ensemble de la DB
+            # On utilise (Artiste, Titre) comme clé unique
+            counts = Counter([(r[1], r[0]) for r in rows if r[0] and r[1]])
+            
             self.tracks = []
             for row in rows:
                 title, artist, timestamp, is_auto, style = row
-                date_dt = self.mac_to_datetime(timestamp)
-                
-                # On ne garde que les infos valides
                 if not title or not artist:
                     continue
 
+                date_dt = self.mac_to_datetime(timestamp)
+                hits = counts.get((artist, title), 1)
+                
                 self.tracks.append({
                     "date": date_dt.strftime("%Y-%m-%d %H:%M") if date_dt else "N/A",
+                    "hits": hits,
                     "artist": artist,
                     "title": title,
                     "type": "🚀 Auto" if is_auto else "👤 Manual",
@@ -96,14 +96,17 @@ class Shazylist:
             return
         
         with open(filename, 'w', encoding='utf-8') as f:
-            f.write("# 🎧 Shazylist - Tracks découvertes\n\n")
+            f.write("# 🎧 Shazylist - Dashboard DJ\n\n")
             f.write(f"*Généré le : {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n\n")
-            f.write("| Date | Source | Artiste | Titre | Recherche |\n")
-            f.write("| :--- | :--- | :--- | :--- | :--- |\n")
+            f.write("| Date | Hits | Source | Artiste | Titre | Recherche |\n")
+            f.write("| :--- | :--- | :--- | :--- | :--- | :--- |\n")
             
             for track in self.tracks:
+                # Formatage du nombre de hits pour visibilité
+                hit_label = f"🔥 **{track['hits']}**" if track['hits'] > 1 else "1"
                 links = f"[Google]({track['search_google']}) / [Beatport]({track['search_beatport']})"
-                f.write(f"| {track['date']} | {track['type']} | **{track['artist']}** | {track['title']} | {links} |\n")
+                
+                f.write(f"| {track['date']} | {hit_label} | {track['type']} | **{track['artist']}** | {track['title']} | {links} |\n")
         
         print(f"✅ Dashboard Markdown créé : {filename}")
 
