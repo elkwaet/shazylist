@@ -1,6 +1,7 @@
 let allTracks = [];
 let currentFilter = 'all';
 let sortConfig = { field: 'date', direction: 'desc' };
+let currentFolders = [];
 
 // Theme Management
 function initTheme() {
@@ -24,6 +25,79 @@ function updateThemeIcon(isLight) {
     }
 }
 
+// Settings Management
+async function loadSettings() {
+    try {
+        const response = await fetch('/api/settings');
+        const data = await response.json();
+        currentFolders = data.music_folders || [];
+        renderFolderList();
+    } catch (error) {
+        console.error('Erreur chargement réglages:', error);
+    }
+}
+
+function renderFolderList() {
+    const list = document.getElementById('folder-list');
+    list.innerHTML = '';
+    currentFolders.forEach((folder, index) => {
+        const item = document.createElement('div');
+        item.className = 'folder-item';
+        item.innerHTML = `
+            <span>${folder}</span>
+            <button class="btn-icon" onclick="removeFolder(${index})">
+                <svg class="icon-inline"><use xlink:href="#icon-trash"></use></svg>
+            </button>
+        `;
+        list.appendChild(item);
+    });
+}
+
+function removeFolder(index) {
+    currentFolders.splice(index, 1);
+    renderFolderList();
+}
+
+async function saveSettings() {
+    const btn = document.getElementById('save-settings');
+    btn.textContent = 'Scanning...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ music_folders: currentFolders })
+        });
+        const data = await response.json();
+        console.log('Scan terminé:', data.files_indexed, 'fichiers indexés');
+        closeSettings();
+        fetchTracks(); // Refresh list to see new matches
+    } catch (error) {
+        console.error('Erreur sauvegarde réglages:', error);
+    } finally {
+        btn.textContent = 'Enregistrer & Scanner';
+        btn.disabled = false;
+    }
+}
+
+function openSettings() {
+    console.log("Ouverture des réglages...");
+    loadSettings();
+    const modal = document.getElementById('settings-modal');
+    if (modal) {
+        modal.style.display = 'block';
+    } else {
+        console.error("Modal 'settings-modal' introuvable !");
+    }
+}
+
+function closeSettings() {
+    console.log("Fermeture des réglages.");
+    document.getElementById('settings-modal').style.display = 'none';
+}
+
+// Tracks Management
 async function fetchTracks() {
     const statusEl = document.getElementById('status');
     const start = document.getElementById('date-start').value;
@@ -77,6 +151,7 @@ function sortAndRender() {
 function renderTable(tracks) {
     const body = document.getElementById('tracks-body');
     const searchTerm = document.getElementById('search').value.toLowerCase();
+    const hideOwned = document.getElementById('hide-owned').checked;
     
     let filtered = tracks;
     
@@ -90,6 +165,10 @@ function renderTable(tracks) {
             t.artist.toLowerCase().includes(searchTerm) || 
             t.title.toLowerCase().includes(searchTerm)
         );
+    }
+
+    if (hideOwned) {
+        filtered = filtered.filter(t => !t.in_library);
     }
 
     body.innerHTML = '';
@@ -115,6 +194,9 @@ function renderTable(tracks) {
         const hitIcon = `<svg class="icon-inline"><use xlink:href="#icon-flame"></use></svg>`;
         const hitLabel = track.hits > 1 ? `<span class="hits-badge">${hitIcon} ${track.hits}</span>` : '1';
         
+        const ownedBadge = track.in_library ? 
+            `<div class="owned-badge"><svg class="icon-inline"><use xlink:href="#icon-check"></use></svg> Library</div>` : '';
+
         tr.innerHTML = `
             <td>
                 <div class="date">${track.date}</div>
@@ -126,6 +208,7 @@ function renderTable(tracks) {
                 <div class="artist-title">
                     <span class="artist-name">${track.artist}</span>
                     <span class="track-name">${track.title}</span>
+                    ${ownedBadge}
                 </div>
             </td>
             <td>${track.style}</td>
@@ -173,6 +256,32 @@ document.getElementById('search').addEventListener('input', () => renderTable(al
 document.getElementById('date-start').addEventListener('change', fetchTracks);
 document.getElementById('date-end').addEventListener('change', fetchTracks);
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+document.getElementById('settings-toggle').addEventListener('click', openSettings);
+document.getElementById('close-settings').addEventListener('click', closeSettings);
+document.getElementById('save-settings').addEventListener('click', saveSettings);
+document.getElementById('hide-owned').addEventListener('change', () => renderTable(allTracks));
+
+document.getElementById('pick-folder-btn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/pick-folder');
+        const data = await response.json();
+        if (data.path) {
+            document.getElementById('new-folder-path').value = data.path;
+        }
+    } catch (error) {
+        console.error('Erreur sélecteur:', error);
+    }
+});
+
+document.getElementById('add-folder-btn').addEventListener('click', () => {
+    const input = document.getElementById('new-folder-path');
+    const path = input.value.trim();
+    if (path) {
+        currentFolders.push(path);
+        input.value = '';
+        renderFolderList();
+    }
+});
 
 document.querySelectorAll('.shortcut-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -234,10 +343,14 @@ document.querySelectorAll('th.sortable').forEach(th => {
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        const search = document.getElementById('search');
-        if (search.value) {
-            search.value = '';
-            renderTable(allTracks);
+        if (document.getElementById('settings-modal').style.display === 'block') {
+            closeSettings();
+        } else {
+            const search = document.getElementById('search');
+            if (search.value) {
+                search.value = '';
+                renderTable(allTracks);
+            }
         }
     }
     if (e.key === 'f' && document.activeElement.tagName !== 'INPUT') {
@@ -249,3 +362,4 @@ window.addEventListener('keydown', (e) => {
 // Initial Init
 initTheme();
 fetchTracks();
+loadSettings();
