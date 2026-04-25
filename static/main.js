@@ -345,6 +345,12 @@ document.querySelectorAll('th.sortable').forEach(th => {
 });
 
 window.addEventListener('keydown', (e) => {
+    // Cmd+, (macOS) ou Ctrl+, (Windows) pour les réglages
+    if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        openSettings();
+    }
+
     if (e.key === 'Escape') {
         if (document.getElementById('settings-modal').style.display === 'block') {
             closeSettings();
