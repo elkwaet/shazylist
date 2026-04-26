@@ -311,20 +311,22 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
 });
 
-document.getElementById('pick-folder-btn').addEventListener('click', async () => {
+document.getElementById('pick-folder-btn')?.addEventListener('click', async () => {
     try {
         const response = await fetch('/api/pick-folder');
         const data = await response.json();
         if (data.path) {
-            document.getElementById('new-folder-path').value = data.path;
+            const input = document.getElementById('new-folder-path');
+            if(input) input.value = data.path;
         }
     } catch (error) {
         console.error('Erreur sélecteur:', error);
     }
 });
 
-document.getElementById('add-folder-btn').addEventListener('click', () => {
+document.getElementById('add-folder-btn')?.addEventListener('click', () => {
     const input = document.getElementById('new-folder-path');
+    if (!input) return;
     const path = input.value.trim();
     if (path) {
         currentFolders.push(path);
