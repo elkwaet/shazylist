@@ -130,7 +130,14 @@
             <div class="settings-section">
                 <h3 data-i18n="settings_scan_title">Scan Local</h3>
                 <p data-i18n="settings_scan_desc">Identifiez les morceaux déjà présents dans vos dossiers.</p>
-                <button class="btn-secondary" id="select-dir" style="width:100%; height:44px; margin-top:10px;" data-i18n="settings_scan_btn">Scanner un dossier</button>
+                
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="text" id="new-folder-path" readonly placeholder="Chemin du dossier..." style="flex: 1;">
+                    <button class="btn-secondary" id="pick-folder-btn" style="padding: 0 15px;">Parcourir</button>
+                </div>
+                <button class="btn-secondary" id="add-folder-btn" style="width:100%; height:44px; margin-top:10px;">Ajouter à la liste</button>
+                
+                <div id="folder-list" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
 
             <div class="settings-section">
