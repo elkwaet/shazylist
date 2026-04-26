@@ -168,6 +168,7 @@ body {
 .toolbar-center,
 .toolbar-right {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 15px;
 }
@@ -393,7 +394,10 @@ th.sortable:hover .icon-sort {
 .modal {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: var(--bg-color);
     z-index: 1000;
     align-items: center;
@@ -669,5 +673,7 @@ footer {
 }
 
 @keyframes spin {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
