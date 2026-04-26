@@ -36,3 +36,5 @@ shazam_export.*
 .DS_Store
 temp_r/
 
+*.icns
+*.png
