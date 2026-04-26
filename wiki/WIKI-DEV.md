@@ -4,37 +4,45 @@ Documentation technique sur l'architecture et le fonctionnement interne de Shazy
 
 ## 🏗️ Architecture
 
-L'application est structurée comme une "Lite App" locale :
-- **Backend** : Flask (Python 3).
+L'application est structurée comme une "Lite App" hybride :
+- **Backend** : Flask (Python 3.12).
+- **Native Wrapper** : `pywebview` pour l'encapsulation WebKit native macOS.
 - **Extraction** : SQLite3 avec mode `ro` (Read-Only) pour éviter de verrouiller la DB Shazam.
-- **Frontend** : Vanilla JS / CSS3 (Variables). Pas de dépendances externes à part Google Fonts.
+- **Frontend** : Vanilla JS / CSS3. Pas de dépendances externes.
+
+## 📦 Compilation & Distribution
+
+### Mode Desktop (Natif)
+L'application est packagée en tant qu'exécutable macOS (`.app`) via **PyInstaller**.
+Le lanceur principal est [desktop.py](../desktop.py).
+
+**Commande de compilation :**
+```bash
+pyinstaller --noconfirm --windowed --name "Shazylist" --icon "icon.icns" --add-data "static:static" --add-data "templates:templates" desktop.py
+```
+
+### Génération du DMG
+Un script d'automatisation [build_dmg.sh](../build_dmg.sh) utilise `create-dmg` pour générer un installateur disque. Il positionne les icônes sur un fond monochrome personnalisé.
+
+**Commande :**
+```bash
+./build_dmg.sh
+```
 
 ## 💾 Gestion de la Donnée
 
 ### Base de Données Shazam
 Shazam utilise SQLite via Core Data.
-- **Timestamp** : Les dates sont au format "Mac Absolute Time" (secondes depuis le 01/01/2001). Conversion effectuée dans `start.py`.
-- **Accès** : L'URL SQLite inclut `?mode=ro` pour permettre la lecture simultanée pendant que Shazam est ouvert.
+- **Timestamp** : Mac Absolute Time (secondes depuis le 01/01/2001).
+- **Accès** : L'URL SQLite inclut `?mode=ro`.
 
-### Filtrage & Tri
-- **Backend** : Le filtrage par dates s'effectue au niveau SQL/Python pour limiter le volume de données transférées.
-- **Frontend** : Le tri (Date/Hits) et la recherche textuelle s'effectuent côté client en Vanilla JS sur l'objet `allTracks` pour une réactivité instantanée.
+### Permissions macOS (TCC)
+Le backend vérifie au démarrage si l'accès à la DB est bloqué par le système de sécurité macOS (Full Disk Access). En cas de blocage, une modale d'aide est déclenchée via l'API `/api/access-status`.
 
 ## 🎨 Design System
-
-### Thèmes (Sombre/Clair)
-Utilisation systématique des **Variables CSS** (`--bg-color`, etc.). Le basculement s'opère par l'ajout de la classe `.light-theme` sur le `body`. La préférence est stockée dans le `localStorage`.
-
-### Icônes (SVG Sprite)
-Toutes les icônes sont centralisées dans un **SVG Sprite** caché en haut de `index.html`. Cela permet une réutilisation simple via `<use xlink:href="#id">` et un contrôle total des couleurs via CSS (`fill`, `stroke`).
-
-### Sticky Header
-Le header utilise `position: sticky` avec un `backdrop-filter: blur` pour l'effet de transparence. 
+- **Thèmes** : Variables CSS avec classe `.light-theme`.
+- **Fenêtre** : Persistance des dimensions enregistrées dans `config.json`.
 
 ## ⚙️ Configuration
-
-- **Port** : Fixé à **5050** dans `app.py`.
-- **Sessions** : Logique JS calculant l'écart entre deux timestamps consécutifs. Seuil actuel : **10 minutes**.
-
-## 🚀 Évolutions
-Consulter [BACKLOG.md](../BACKLOG.md).
+- **Port** : 5050.
+- **Raccourcis** : `Cmd+,` mappé en JS pour ouvrir les réglages.

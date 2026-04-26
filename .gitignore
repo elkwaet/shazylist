@@ -33,3 +33,4 @@ ENV/
 shazam_export.*
 .env
 *.dmg
+.DS_Store
