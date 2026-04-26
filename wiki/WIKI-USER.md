@@ -1,43 +1,33 @@
-# 📖 Wiki Utilisateur - Shazylist
+# 📖 Guide Utilisateur - Shazylist
 
-Bienvenue dans le guide utilisateur de Shazylist.
+Shazylist est ton dashboard personnel pour explorer et exporter tes découvertes Shazam sur macOS.
 
-## 🚀 Lancement rapide
+## 📥 Installation
 
-1. Ouvrez votre terminal.
-2. Allez dans le répertoire du projet.
-3. Lancez l'application :
-   ```bash
-   python3 app.py
-   ```
-4. Accédez à l'interface via votre navigateur : [http://127.0.0.1:5050](http://127.0.0.1:5050)
+1. **Téléchargement** : Récupère le fichier `Shazylist-Installer.dmg`.
+2. **Installation** : Ouvre le fichier et glisse l'icône **Shazylist** dans le dossier **Applications**.
+3. **Premier Lancement** : 
+   - Fais un **Clic-droit > Ouvrir** sur l'application dans tes Applications (nécessaire car l'app n'est pas signée officiellement).
+   - Valide l'ouverture dans la boîte de dialogue macOS.
+
+## 🛡️ Sécurité & Permissions
+
+Pour lire tes morceaux, Shazylist doit pouvoir accéder à la base de données interne de Shazam. macOS protège ces fichiers.
+
+**Si l'application affiche un message d'accès requis :**
+1. Ouvre les **Réglages Système**.
+2. Va dans **Confidentialité et sécurité** > **Accès complet au disque**.
+3. Ajoute **Shazylist** à la liste et coche la case.
+4. Redémarre Shazylist.
 
 ## 🎧 Fonctionnalités
 
-### Dashboard Web (Command Center)
-- **Sticky Header** : La barre de contrôle reste fixée en haut lors du défilement.
-- **Tri Dynamique** : Cliquez sur les en-têtes **Date** ou **Hits** pour trier votre collection.
-- **Thèmes** : Basculez entre le mode **Sombre** 🌙 et **Clair** ☀️ via l'icône dans le header.
-- **Stats Flash** : Un résumé en temps réel (Total, Top Artiste, Ratio Auto) s'affiche sous les filtres.
+- **Recherche** : Filtre instantanément par artiste ou titre.
+- **Top Hits** : Identifie les morceaux que tu as shazamé le plus souvent.
+- **Auto vs Solo** : Distingue les morceaux capturés en mode automatique des recherches manuelles.
+- **Exports** : Génère des listes propres en TXT ou CSV pour tes sets DJ.
+- **Liens Rapides** : Accède directement à Beatport, Traxsource ou YouTube depuis ton dashboard.
 
-### Filtrage Avancé
-- **Recherche (Raccourci `F`)** : Filtrez instantanément par artiste ou titre. Appuyez sur `ESC` pour effacer.
-- **Dates** : Définissez une plage précise ou utilisez les raccourcis **Aujourd'hui**, **Hier**, **Semaine**.
-- **Source** : Filtrez entre **Auto-shazam** 🚀 (sessions automatiques) et **Solo-shazam** 👤 (tags manuels).
-- **Sessions** : Les morceaux sont séparés visuellement si plus de 10 minutes les séparent.
-
-### Recherche DJ
-Cliquez sur les liens à droite de chaque morceau pour ouvrir une recherche sur :
-- **Beatport (BP)**
-- **Traxsource (TX)**
-- **Juno Download (JN)**
-- **YouTube (YT)**
-- **Google (G)**
-
-### Exports
-- **CSV** : Un export complet respectant vos filtres de dates.
-- **TXT** : Une liste épurée (N° - Titre - Artiste) pour vos tracklists.
-
-## ⚠️ Notes importantes
-- **Port 5050** : Shazylist utilise le port 5050 pour éviter les conflits avec AirPlay sur macOS.
-- **Accès Disque** : L'application lit la base de données locale de Shazam. Si rien ne s'affiche, vérifiez les permissions.
+## ⌨️ Raccourcis
+- `Cmd + ,` : Ouvrir les réglages.
+- `Echap` : Fermer les modales.
