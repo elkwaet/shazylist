@@ -18,8 +18,6 @@ Pour une installation immédiate sur macOS :
 - **Dashboard Natif** : Interface ultra-rapide basée sur WebKit, sans dépendance de navigateur.
 - **Analyse de Fréquence** : Visualisez vos morceaux les plus "shazamés" (Hits).
 - **Filtrage Avancé** : Tri par date, par type (Auto-Shazam vs Solo) et recherche textuelle instantanée.
-- **Roadmap & Marketing**
-- **Landing Page** : Un [PRD complet](file:///Users/elk/.gemini/antigravity/brain/fe5418b9-5012-49a7-a3e8-a3d8702c0673/PRD-LANDING-PAGE.md) a été rédigé pour la création du site vitrine sous Astro.
 - **Gestion des Doublons** : Scan local pour identifier les titres que vous possédez déjà dans votre bibliothèque.
 - **Export Pro** : Exportation de vos listes en formats TXT ou CSV pour une intégration dans Rekordbox ou Serato.
 - **Design Minimaliste** : Thème Noir & Blanc pur, moderne et épuré.
@@ -48,8 +46,7 @@ pyinstaller --noconfirm --windowed --name "Shazylist" --icon "icon.icns" --add-d
 
 ## Documentation
 - [Wiki Utilisateur](wiki/WIKI-USER.md)
-- [PRD Landing Page](file:///Users/elk/.gemini/antigravity/brain/fe5418b9-5012-49a7-a3e8-a3d8702c0673/PRD-LANDING-PAGE.md) : Plan détaillé pour le site vitrine (Astro).
-- [Wiki Développeur](file:///Users/elk/PROJ-DEV/shazylist/wiki/WIKI-DEV.md) : Architecture technique.
+- [Wiki Développeur](wiki/WIKI-DEV.md) : Architecture technique.
 - [Changelog](CHANGELOG.md)
 
 ## Licence

@@ -149,8 +149,8 @@ async function fetchTracks() {
     const exportTxt = document.querySelector('a[href*="/export/txt"]');
     
     let queryParams = `?start=${start}&end=${end}`;
-    exportCsv.href = `/export/csv${queryParams}`;
-    exportTxt.href = `/export/txt${queryParams}`;
+    if (exportCsv) exportCsv.href = `/export/csv${queryParams}`;
+    if (exportTxt) exportTxt.href = `/export/txt${queryParams}`;
 
     try {
         const response = await fetch(`/api/tracks${queryParams}`);
