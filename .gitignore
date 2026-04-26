@@ -33,8 +33,7 @@ ENV/
 shazam_export.*
 .env
 *.dmg
-.DS_Store
 temp_r/
+config.json
+debug.log
 
-*.icns
-*.png
