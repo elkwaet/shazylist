@@ -231,6 +231,8 @@ function renderTable(tracks) {
         prevDate = track.date;
 
         const tr = document.createElement('tr');
+        if (track.in_library) tr.classList.add('row-owned');
+        
         const hitIcon = `<svg class="icon-inline"><use xlink:href="#icon-flame"></use></svg>`;
         const hitLabel = track.hits > 1 ? `<span class="hits-badge">${hitIcon} ${track.hits}</span>` : '1';
         
@@ -253,10 +255,14 @@ function renderTable(tracks) {
             </td>
             <td>${track.style}</td>
             <td class="links">
-                <a href="${track.links.beatport}" target="_blank">BP</a>
-                <a href="${track.links.traxsource}" target="_blank">TX</a>
-                <a href="${track.links.youtube}" target="_blank">YT</a>
-                <a href="${track.links.google}" target="_blank">G</a>
+                <a href="${track.links.beatport}" target="_blank" title="Beatport">BP</a>
+                <a href="${track.links.traxsource}" target="_blank" title="Traxsource">TX</a>
+                <a href="${track.links.junodownload}" target="_blank" title="Juno">JD</a>
+                <a href="${track.links.spotify}" target="_blank" title="Spotify">SP</a>
+                <a href="${track.links.apple}" target="_blank" title="Apple Music">AM</a>
+                <a href="${track.links.soundcloud}" target="_blank" title="SoundCloud">SC</a>
+                <a href="${track.links.youtube}" target="_blank" title="YouTube">YT</a>
+                <a href="${track.links.google}" target="_blank" title="Google">G</a>
             </td>
         `;
         body.appendChild(tr);
