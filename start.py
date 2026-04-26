@@ -42,7 +42,7 @@ class Shazylist:
         try:
             conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
             cursor = conn.cursor()
-            query = "SELECT ZTRACKNAME, ZSUBTITLE, ZDATE, ZISAUTO, ZSTYLE, ZALBUMARTURLSTRING FROM ZSHTAGRESULTMO ORDER BY ZDATE DESC"
+            query = "SELECT ZTRACKNAME, ZSUBTITLE, ZDATE, ZISAUTO, ZALBUMARTURLSTRING FROM ZSHTAGRESULTMO ORDER BY ZDATE DESC"
             cursor.execute(query)
             rows = cursor.fetchall()
             conn.close()
@@ -58,7 +58,7 @@ class Shazylist:
         
         filtered = []
         for row in rows:
-            title, artist, timestamp, is_auto, style, cover_url = row
+            title, artist, timestamp, is_auto, cover_url = row
             if not title or not artist:
                 continue
 
@@ -80,7 +80,6 @@ class Shazylist:
                 "artist": artist,
                 "title": title,
                 "type": "Auto-shazam" if is_auto else "Solo-shazam",
-                "style": style or "-",
                 "cover": cover_url or "https://www.shazam.com/resources/9672688b56d3c01570776b7e5436c646b9a89667/vendor/shazam/shazam-web-ui-core-assets/dist/assets/images/no-cover-art.png",
                 "links": {
                     "google": f"https://www.google.com/search?q={query_str}",
