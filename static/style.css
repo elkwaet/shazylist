@@ -7,6 +7,7 @@
     --card-bg: #fafafa;
     --accent-color: #000000;
     --hover-bg: #f5f5f5;
+    --header-border-color: #000000;
 }
 
 body.dark-theme {
@@ -17,6 +18,7 @@ body.dark-theme {
     --card-bg: #111111;
     --accent-color: #ffffff;
     --hover-bg: #1a1a1a;
+    --header-border-color: #ffffff;
 }
 
 /* --- RESET & BASE --- */
@@ -35,7 +37,7 @@ body {
     position: sticky;
     top: 0;
     background: var(--bg-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--header-border-color);
     z-index: 100;
     padding: 10px 0;
     backdrop-filter: blur(10px);
@@ -47,7 +49,7 @@ body {
 
 .search-box-container { flex: 2; max-width: 500px; position: relative; }
 .search-box-container input {
-    width: 100%; background: var(--card-bg); border: 1px solid var(--border-color);
+    width: 100%; background: var(--card-bg); border: 1px solid var(--header-border-color);
     color: var(--text-color); padding: 6px 12px; border-radius: 6px; font-size: 13px;
     text-align: center; transition: all 0.2s ease;
 }
@@ -81,12 +83,13 @@ body {
 .sep { font-size: 12px; color: var(--secondary-text); }
 
 .shortcuts { display: flex; gap: 4px; }
-.shortcut-btn { background: transparent; border: 1px solid var(--border-color); color: var(--secondary-text); padding: 4px 8px; font-size: 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 600; }
-.shortcut-btn:hover { border-color: var(--text-color); color: var(--text-color); }
+.shortcut-btn { background: transparent; border: 1px solid transparent; color: var(--secondary-text); padding: 3px 7px; font-size: 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 600; transition: all 0.2s; }
+.shortcut-btn:hover { color: var(--text-color); }
+.shortcut-btn.active { border-color: var(--header-border-color); color: var(--text-color); background: var(--bg-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
 .source-filters { display: flex; background: var(--card-bg); padding: 3px; border-radius: 6px; border: 1px solid var(--border-color); }
-.filter-btn { background: transparent; border: none; color: var(--secondary-text); padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; border-radius: 4px; }
-.filter-btn.active { background: var(--bg-color); color: var(--text-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.filter-btn { background: transparent; border: 1px solid transparent; color: var(--secondary-text); padding: 3px 9px; font-size: 11px; font-weight: 700; cursor: pointer; border-radius: 4px; transition: all 0.2s; }
+.filter-btn.active { background: var(--bg-color); color: var(--text-color); border-color: var(--header-border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
 .checkbox-filter { display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; color: var(--secondary-text); }
 

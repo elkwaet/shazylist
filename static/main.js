@@ -299,8 +299,14 @@ function updateStats() {
 
 // Event Listeners
 document.getElementById('search')?.addEventListener('input', () => renderTable(allTracks));
-document.getElementById('date-start')?.addEventListener('change', fetchTracks);
-document.getElementById('date-end')?.addEventListener('change', fetchTracks);
+document.getElementById('date-start')?.addEventListener('change', () => {
+    document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+    fetchTracks();
+});
+document.getElementById('date-end')?.addEventListener('change', () => {
+    document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+    fetchTracks();
+});
 document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
 document.getElementById('settings-toggle')?.addEventListener('click', openSettings);
 document.getElementById('close-settings')?.addEventListener('click', closeSettings);
@@ -337,6 +343,8 @@ document.getElementById('add-folder-btn')?.addEventListener('click', () => {
 
 document.querySelectorAll('.shortcut-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+        document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         const range = btn.dataset.range;
         const startInput = document.getElementById('date-start');
         const endInput = document.getElementById('date-end');
