@@ -45,9 +45,6 @@ if [[ "$push_choice" =~ ^[Yy]$ ]]; then
     echo "Envoi vers origin/$current_branch..."
     git push origin "$current_branch"
     
-    echo "Envoi vers public/$current_branch..."
-    git push public "$current_branch"
-    
     echo "✅ Publication terminée avec succès !"
 else
     echo "⏩ Push ignoré."
@@ -87,7 +84,9 @@ if [[ "$release_choice" =~ ^[Yy]$ ]]; then
             zip -q Shazylist-Installer.zip Shazylist-Installer.dmg
             
             echo "🚀 Création de la release $tag_name sur GitHub..."
-            # On s'assure que le tag est poussé d'abord
+            # On s'assure que le code et le tag sont poussés sur GitHub d'abord
+            current_branch=$(git rev-parse --abbrev-ref HEAD)
+            git push public "$current_branch"
             git tag "$tag_name"
             git push public "$tag_name"
             
