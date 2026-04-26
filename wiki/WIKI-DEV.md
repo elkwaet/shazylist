@@ -1,8 +1,8 @@
-# 🛠️ Wiki Développeur - Shazylist
+# Wiki Développeur - Shazylist
 
 Documentation technique sur l'architecture et le fonctionnement interne de Shazylist.
 
-## 🏗️ Architecture
+## Architecture
 
 L'application est structurée comme une "Lite App" hybride :
 - **Backend** : Flask (Python 3.12).
@@ -10,7 +10,7 @@ L'application est structurée comme une "Lite App" hybride :
 - **Extraction** : SQLite3 avec mode `ro` (Read-Only) pour éviter de verrouiller la DB Shazam.
 - **Frontend** : Vanilla JS / CSS3. Pas de dépendances externes.
 
-## 📦 Compilation & Distribution
+## Compilation & Distribution
 
 ### Mode Desktop (Natif)
 L'application est packagée en tant qu'exécutable macOS (`.app`) via **PyInstaller**.
@@ -29,7 +29,7 @@ Un script d'automatisation [build_dmg.sh](../build_dmg.sh) utilise `create-dmg` 
 ./build_dmg.sh
 ```
 
-## 💾 Gestion de la Donnée
+## Gestion de la Donnée
 
 ### Base de Données Shazam
 Shazam utilise SQLite via Core Data.
@@ -39,10 +39,9 @@ Shazam utilise SQLite via Core Data.
 ### Permissions macOS (TCC)
 Le backend vérifie au démarrage si l'accès à la DB est bloqué par le système de sécurité macOS (Full Disk Access). En cas de blocage, une modale d'aide est déclenchée via l'API `/api/access-status`.
 
-## 🎨 Design System
+## Design System
 - **Thèmes** : Variables CSS avec classe `.light-theme`.
 - **Fenêtre** : Persistance des dimensions enregistrées dans `config.json`.
 
-## ⚙️ Configuration
-- **Port** : 5050.
-- **Raccourcis** : `Cmd+,` mappé en JS pour ouvrir les réglages.
+## Roadmap & Marketing
+- **Landing Page** : Un [PRD complet](file:///Users/elk/.gemini/antigravity/brain/fe5418b9-5012-49a7-a3e8-a3d8702c0673/PRD-LANDING-PAGE.md) est disponible pour le développement du site vitrine sous Astro.
