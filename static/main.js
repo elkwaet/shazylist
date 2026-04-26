@@ -224,7 +224,7 @@ function renderTable(tracks) {
             if (diffMins > 10) {
                 const separator = document.createElement('tr');
                 separator.className = 'session-separator';
-                separator.innerHTML = `<td colspan="6"></td>`;
+                separator.innerHTML = `<td colspan="5"></td>`;
                 body.appendChild(separator);
             }
         }
@@ -253,7 +253,6 @@ function renderTable(tracks) {
                     ${ownedBadge}
                 </div>
             </td>
-            <td>${track.style}</td>
             <td class="links">
                 <a href="${track.links.beatport}" target="_blank" title="Beatport">BP</a>
                 <a href="${track.links.traxsource}" target="_blank" title="Traxsource">TX</a>
