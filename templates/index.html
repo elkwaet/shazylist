@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shazylist - Dashboard DJ</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
 </head>
 <body class="dark-theme">
     <svg style="display: none;">
@@ -30,8 +31,9 @@
                     <h1>Shazylist</h1>
                 </div>
 
-                <div class="search-box-container">
-                    <input type="text" id="search" placeholder="Rechercher... (f)">
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Artiste, titre, style..." data-i18n="search_placeholder">
+                    <svg class="search-icon"><use xlink:href="#icon-search"></use></svg>
                 </div>
 
                 <div class="header-right">
@@ -42,10 +44,6 @@
                     <button id="settings-toggle" class="icon-btn-ui" title="Réglages">
                         <svg class="icon-svg"><use xlink:href="#icon-settings"></use></svg>
                     </button>
-                    <div class="export-group">
-                        <a href="/export/csv" class="btn-export">CSV</a>
-                        <a href="/export/txt" class="btn-export">TXT</a>
-                    </div>
                 </div>
             </div>
 
@@ -66,10 +64,10 @@
                 </div>
 
                 <div class="toolbar-center">
-                    <div class="source-filters">
-                        <button class="filter-btn active" data-filter="all">Tous</button>
-                        <button class="filter-btn" data-filter="auto">Auto-Shazam</button>
-                        <button class="filter-btn" data-filter="solo">Solo-Shazam</button>
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all" data-i18n="btn_all">Tous</button>
+                        <button class="filter-btn" data-filter="auto" data-i18n="btn_auto">Auto-Shazam</button>
+                        <button class="filter-btn" data-filter="solo" data-i18n="btn_solo">Solo-Shazam</button>
                     </div>
                     <label class="checkbox-filter">
                         <input type="checkbox" id="hide-owned">
@@ -79,9 +77,18 @@
 
                 <div class="toolbar-right">
                     <div class="mini-stats">
-                        <div class="m-stat"><span class="m-val" id="stat-total">-</span> <span class="m-lab">TRACKS</span></div>
-                        <div class="m-stat"><span class="m-val" id="stat-artist">-</span> <span class="m-lab">TOP</span></div>
-                        <div class="m-stat"><span class="m-val" id="stat-ratio">-</span> <span class="m-lab">AUTO</span></div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="total-tracks">0</span>
+                            <span class="stat-label" data-i18n="stats_tracks">Morceaux</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="top-count">0</span>
+                            <span class="stat-label" data-i18n="stats_top">Top</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="auto-ratio">0%</span>
+                            <span class="stat-label" data-i18n="stats_ratio">Ratio Auto</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -93,12 +100,13 @@
             <table id="tracks-table">
                 <thead>
                     <tr>
-                        <th class="sortable" data-sort="date">DATE <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg></th>
-                        <th class="sortable" data-sort="hits">HITS <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg></th>
-                        <th>COVER</th>
-                        <th>ARTISTE / TITRE</th>
-                        <th>GENRE</th>
-                        <th>RECHERCHE</th>
+                        <th class="sortable" data-sort="date" data-i18n="col_date">Date</th>
+                        <th class="sortable" data-sort="hits" data-i18n="col_hits">Hits</th>
+                        <th data-i18n="col_artist">Artiste</th>
+                        <th data-i18n="col_title">Titre</th>
+                        <th data-i18n="col_type" class="hide-mobile">Type</th>
+                        <th data-i18n="col_style" class="hide-mobile">Style</th>
+                        <th data-i18n="col_actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="tracks-body"></tbody>
@@ -109,38 +117,57 @@
     <!-- Modals -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Réglages Scan Local</h2>
-                <button id="close-settings" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p class="settings-desc">Ajoutez vos dossiers de musique pour identifier les Shazams que vous possédez déjà.</p>
-                <div id="folder-list" class="folder-list"></div>
-                <div class="add-folder-box">
-                    <input type="text" id="new-folder-path" placeholder="/Chemin/vers/ma/musique">
-                    <button id="pick-folder-btn" class="btn-secondary" title="Parcourir...">📂</button>
-                    <button id="add-folder-btn" class="btn-primary"><svg class="icon-btn"><use xlink:href="#icon-plus"></use></svg> Ajouter</button>
+            <h2 data-i18n="settings_title">Réglages</h2>
+            
+            <div class="settings-section">
+                <h3 data-i18n="settings_lang_title">Langue</h3>
+                <div class="lang-switcher">
+                    <button class="lang-btn" data-lang="fr">FR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
                 </div>
             </div>
-            <div class="modal-footer"><button id="save-settings" class="btn-save">Enregistrer & Scanner</button></div>
+
+            <div class="settings-section">
+                <h3 data-i18n="settings_scan_title">Scan Local</h3>
+                <p data-i18n="settings_scan_desc">Identifiez les morceaux déjà présents dans vos dossiers.</p>
+                <button class="btn-secondary" id="select-dir" style="width:100%; height:44px; margin-top:10px;" data-i18n="settings_scan_btn">Scanner un dossier</button>
+            </div>
+
+            <div class="settings-section">
+                <h3 data-i18n="settings_theme_title">Thème</h3>
+                <button id="theme-toggle" class="btn-secondary" style="width:100%; height:44px;">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+
+            <button class="btn-save" id="save-settings" data-i18n="btn_save">Enregistrer</button>
         </div>
     </div>
 
+    <!-- Modale TCC (Accès Disque) -->
     <div id="tcc-modal" class="modal">
         <div class="modal-content tcc-content">
-            <div class="modal-header">
-                <h2><svg class="icon-ui-shield"><use xlink:href="#icon-shield"></use></svg> Accès requis</h2>
-            </div>
-            <div class="modal-body">
-                <p>Pour afficher vos morceaux, <strong>Shazylist</strong> doit pouvoir lire la base de données locale de Shazam.</p>
-                <div class="tcc-steps">
-                    <div class="step"><span class="step-num">1</span><p>Ouvrez les <strong>Réglages Système</strong>.</p></div>
-                    <div class="step"><span class="step-num">2</span><p>Allez dans <strong>Confidentialité et sécurité</strong> > <strong>Accès complet au disque</strong>.</p></div>
-                    <div class="step"><span class="step-num">3</span><p>Cochez <strong>Shazylist</strong> (ou votre Terminal).</p></div>
+            <h2 data-i18n="tcc_title">Accès Requis</h2>
+            <p data-i18n="tcc_desc">macOS bloque l'accès à la base de données de Shazam par défaut.</p>
+            
+            <div class="tcc-steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <p data-i18n="tcc_step1">Ouvrez les Réglages Système.</p>
                 </div>
-                <div class="tcc-alert">⚠️ Une fois autorisé, redémarrez l'application.</div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <p data-i18n="tcc_step2">Allez dans Confidentialité et sécurité > Accès complet au disque.</p>
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <p data-i18n="tcc_step3">Ajoutez et cochez Shazylist dans la liste.</p>
+                </div>
             </div>
-            <div class="modal-footer"><button id="open-tcc-settings" class="btn-primary">Ouvrir les Réglages</button></div>
+
+            <div class="tcc-alert" data-i18n="tcc_alert">Relancez l'application après avoir accordé l'accès.</div>
+
+            <button class="btn-save" id="open-tcc" data-i18n="tcc_btn_open">Ouvrir les Réglages</button>
         </div>
     </div>
 

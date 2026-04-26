@@ -184,6 +184,32 @@ th.sortable:hover .icon-sort { opacity: 1; }
     cursor: pointer; letter-spacing: 1px; margin-top: 10px;
 }
 
+/* i18n Lang Switcher */
+.lang-switcher {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.lang-btn {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    flex: 1;
+    transition: all 0.2s;
+}
+
+.lang-btn.active {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
+}
+
 .btn-save:disabled {
     opacity: 0.7;
     cursor: wait;

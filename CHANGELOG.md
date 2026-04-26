@@ -2,6 +2,8 @@
 
 ## [4.1.0] - 2026-04-26
 ### Added
+- Internationalisation complète (Français/Anglais).
+- Sélecteur de langue dans les réglages.
 - Script de build DMG automatisé (`build_dmg.sh`).
 - Fond visuel pour l'installateur DMG.
 - Licence MIT.
