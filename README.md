@@ -9,7 +9,7 @@ Shazylist est un dashboard natif pour macOS conçu pour les DJ et les chercheurs
 ## Installation rapide
 
 Pour une installation immédiate sur macOS :
-1. Téléchargez la dernière version : [**Shazylist-Installer.dmg**](https://github.com/elkwaet/shazylist/releases/latest)
+1. Téléchargez la dernière version : [**Shazylist-Installer.dmg**](https://github.com/elkwaet/shazylist/releases/latest/download/Shazylist-Installer.dmg)
 2. Glissez l'application dans votre dossier Applications.
 
 3. **Important** : Effectuez un clic-droit sur l'application et choisissez "Ouvrir" pour contourner l'absence de signature officielle.
