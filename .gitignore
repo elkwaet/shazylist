@@ -35,3 +35,5 @@ shazam_export.*
 *.dmg
 .DS_Store
 **/*.DS_Store
+temp_r/
+
