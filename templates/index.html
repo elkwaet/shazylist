@@ -28,8 +28,7 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <svg class="icon-svg"><use xlink:href="#icon-logo"></use></svg>
-                    <h1>Shazylist</h1>
+                    <h1>SHAZYLIST</h1>
                 </div>
 
                 <div class="search-box-container">
@@ -39,6 +38,9 @@
 
                 <div class="header-right">
                     <div class="status-minimal" id="status">Chargement...</div>
+                    <button class="icon-btn-ui" id="reload-btn" title="Reload Database">
+                        <svg class="icon-svg"><use xlink:href="#icon-reload"></use></svg>
+                    </button>
                     <button id="theme-toggle" class="icon-btn-ui" title="Thème">
                         <svg class="icon-svg"><use xlink:href="#icon-sun"></use></svg>
                     </button>
@@ -57,10 +59,10 @@
                     </div>
                     
                     <div class="shortcuts">
-                        <button class="shortcut-btn" data-range="today">Aujourd'hui</button>
-                        <button class="shortcut-btn" data-range="yesterday">Hier</button>
-                        <button class="shortcut-btn" data-range="week">Semaine</button>
-                        <button class="shortcut-btn" data-range="all">Tout</button>
+                        <button class="shortcut-btn" data-range="today" data-i18n="btn_today">Aujourd'hui</button>
+                        <button class="shortcut-btn" data-range="yesterday" data-i18n="btn_yesterday">Hier</button>
+                        <button class="shortcut-btn" data-range="week" data-i18n="btn_week">Semaine</button>
+                        <button class="shortcut-btn" data-range="all" data-i18n="btn_all_time">Tout</button>
                     </div>
                 </div>
 

@@ -137,10 +137,18 @@ function closeSettings() {
 }
 
 // Tracks Management
-async function fetchTracks() {
+async function fetchTracks(isReload = false) {
     const statusEl = document.getElementById('status');
     const start = document.getElementById('date-start').value;
     const end = document.getElementById('date-end').value;
+
+    if (isReload) {
+        const reloadBtn = document.getElementById('reload-btn');
+        if (reloadBtn) {
+            reloadBtn.style.animation = 'spin 1s linear infinite';
+            setTimeout(() => reloadBtn.style.animation = '', 1000);
+        }
+    }
     
     const dict = translations[currentLang];
     statusEl.textContent = currentLang === 'fr' ? 'Mise à jour...' : 'Updating...';
@@ -310,6 +318,7 @@ document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
 document.getElementById('settings-toggle')?.addEventListener('click', openSettings);
 document.getElementById('close-settings')?.addEventListener('click', closeSettings);
 document.getElementById('save-settings')?.addEventListener('click', saveSettings);
+document.getElementById('reload-btn')?.addEventListener('click', () => fetchTracks(true));
 document.getElementById('hide-owned')?.addEventListener('change', () => renderTable(allTracks));
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
