@@ -298,14 +298,14 @@ function updateStats() {
 }
 
 // Event Listeners
-document.getElementById('search').addEventListener('input', () => renderTable(allTracks));
-document.getElementById('date-start').addEventListener('change', fetchTracks);
-document.getElementById('date-end').addEventListener('change', fetchTracks);
-document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-document.getElementById('settings-toggle').addEventListener('click', openSettings);
-document.getElementById('close-settings').addEventListener('click', closeSettings);
-document.getElementById('save-settings').addEventListener('click', saveSettings);
-document.getElementById('hide-owned').addEventListener('change', () => renderTable(allTracks));
+document.getElementById('search')?.addEventListener('input', () => renderTable(allTracks));
+document.getElementById('date-start')?.addEventListener('change', fetchTracks);
+document.getElementById('date-end')?.addEventListener('change', fetchTracks);
+document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+document.getElementById('settings-toggle')?.addEventListener('click', openSettings);
+document.getElementById('close-settings')?.addEventListener('click', closeSettings);
+document.getElementById('save-settings')?.addEventListener('click', saveSettings);
+document.getElementById('hide-owned')?.addEventListener('change', () => renderTable(allTracks));
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
