@@ -7,9 +7,14 @@ APP_NAME="Shazylist"
 DMG_NAME="Shazylist-Installer.dmg"
 APP_PATH="dist/${APP_NAME}.app"
 
+echo "🚀 Phase 1: Compilation de l'application native..."
+pyinstaller --noconfirm Shazylist.spec
+
+APP_PATH="dist/${APP_NAME}.app"
+
 # Vérifier si l'app existe
 if [ ! -d "$APP_PATH" ]; then
-    echo "❌ Erreur: L'application ${APP_PATH} n'existe pas. Lance d'abord la compilation."
+    echo "❌ Erreur: La compilation a échoué. L'application ${APP_PATH} est introuvable."
     exit 1
 fi
 

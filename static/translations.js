@@ -25,7 +25,9 @@ const translations = {
         tcc_step2: "Allez dans Confidentialité et sécurité > Accès complet au disque.",
         tcc_step3: "Ajoutez et cochez Shazylist dans la liste.",
         tcc_btn_open: "Ouvrir les Réglages",
-        tcc_alert: "Relancez l'application après avoir accordé l'accès."
+        tcc_alert: "Relancez l'application après avoir accordé l'accès.",
+        about_desc: "Dashboard d'analyse et d'export pour les DJ.",
+        about_author: "Auteur"
     },
     en: {
         title: "Shazylist - DJ Dashboard",
@@ -53,6 +55,8 @@ const translations = {
         tcc_step2: "Go to Privacy & Security > Full Disk Access.",
         tcc_step3: "Add and check Shazylist in the list.",
         tcc_btn_open: "Open Settings",
-        tcc_alert: "Restart the application after granting access."
+        tcc_alert: "Restart the application after granting access.",
+        about_desc: "Analysis and export dashboard for DJs.",
+        about_author: "Author"
     }
 };
