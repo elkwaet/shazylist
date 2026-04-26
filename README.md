@@ -14,7 +14,7 @@ Pour une installation immédiate sur macOS :
 3. **Important** : Effectuez un clic-droit sur l'application et choisissez "Ouvrir" pour contourner l'absence de signature officielle.
 
 ## Fonctionnalités Clés
-
+- **Mode Hybride (Double Accès)** : Utilisez Shazylist via l'interface native bureau, ou ouvrez simplement `http://localhost:5050` dans votre navigateur Web en parallèle. (Mode Web seul possible via `python3 app.py`).
 - **Dashboard Natif** : Interface ultra-rapide basée sur WebKit, sans dépendance de navigateur.
 - **Analyse de Fréquence** : Visualisez vos morceaux les plus "shazamés" (Hits).
 - **Filtrage Avancé** : Tri par date, par type (Auto-Shazam vs Solo) et recherche textuelle instantanée.
