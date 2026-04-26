@@ -80,9 +80,6 @@ if [[ "$release_choice" =~ ^[Yy]$ ]]; then
         if [ -z "$tag_name" ]; then
             echo "❌ Tag vide. Annulation de la release."
         else
-            echo "🤐 Compression du DMG en ZIP (pour compatibilité maximale)..."
-            zip -q Shazylist-Installer.zip Shazylist-Installer.dmg
-            
             echo "🚀 Création de la release $tag_name sur GitHub..."
             # On s'assure que le code et le tag sont poussés sur GitHub d'abord
             current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -91,12 +88,10 @@ if [[ "$release_choice" =~ ^[Yy]$ ]]; then
             git push public "$tag_name"
             
             # Création de la release avec le CLI GitHub
-            gh release create "$tag_name" Shazylist-Installer.zip --title "Shazylist $tag_name" --notes "Nouvelle version $tag_name de Shazylist."
+            gh release create "$tag_name" Shazylist-Installer.dmg --title "Shazylist $tag_name" --notes "Nouvelle version $tag_name de Shazylist."
             
             if [ $? -eq 0 ]; then
                 echo "✅ Release $tag_name publiée avec succès sur GitHub !"
-                # Nettoyage du zip local
-                rm Shazylist-Installer.zip
             else
                 echo "❌ Échec de la création de la release via le CLI GitHub."
             fi
