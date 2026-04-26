@@ -2,6 +2,7 @@ let allTracks = [];
 let currentFilter = 'all';
 let sortConfig = { field: 'date', direction: 'desc' };
 let currentFolders = [];
+let currentLang = localStorage.getItem('lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
 
 // Theme Management
 function initTheme() {
@@ -25,6 +26,40 @@ function updateThemeIcon(isLight) {
     const btn = document.getElementById('theme-toggle');
     if (btn) {
         btn.innerHTML = `<svg class="icon-svg"><use xlink:href="${isLight ? '#icon-moon' : '#icon-sun'}"></use></svg>`;
+    }
+}
+
+// i18n Management
+function applyTranslations() {
+    const dict = translations[currentLang];
+    
+    // Titre de la page
+    document.title = dict.title;
+
+    // Éléments avec data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key]) {
+            if (el.tagName === 'INPUT' && el.placeholder) {
+                el.placeholder = dict[key];
+            } else {
+                el.textContent = dict[key];
+            }
+        }
+    });
+
+    // Mise à jour visuelle des boutons de langue
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+}
+
+function setLanguage(lang) {
+    if (translations[lang]) {
+        currentLang = lang;
+        localStorage.setItem('lang', lang);
+        applyTranslations();
+        fetchTracks(); // Recharge pour mettre à jour les statuts/textes dynamiques
     }
 }
 
@@ -63,7 +98,8 @@ function removeFolder(index) {
 
 async function saveSettings() {
     const btn = document.getElementById('save-settings');
-    btn.textContent = 'Scanning...';
+    const dict = translations[currentLang];
+    btn.textContent = currentLang === 'fr' ? 'Scan...' : 'Scanning...';
     btn.disabled = true;
 
     try {
@@ -79,7 +115,7 @@ async function saveSettings() {
     } catch (error) {
         console.error('Erreur sauvegarde réglages:', error);
     } finally {
-        btn.textContent = 'Enregistrer & Scanner';
+        btn.textContent = dict.btn_save;
         btn.disabled = false;
     }
 }
@@ -106,7 +142,8 @@ async function fetchTracks() {
     const start = document.getElementById('date-start').value;
     const end = document.getElementById('date-end').value;
     
-    statusEl.textContent = 'Mise à jour des Shazams...';
+    const dict = translations[currentLang];
+    statusEl.textContent = currentLang === 'fr' ? 'Mise à jour...' : 'Updating...';
 
     const exportCsv = document.querySelector('a[href*="/export/csv"]');
     const exportTxt = document.querySelector('a[href*="/export/txt"]');
@@ -124,11 +161,11 @@ async function fetchTracks() {
             return;
         }
 
-        statusEl.textContent = `${allTracks.length} morceaux filtrés`;
+        statusEl.textContent = currentLang === 'fr' ? `${allTracks.length} morceaux` : `${allTracks.length} tracks`;
         sortAndRender();
         updateStats();
     } catch (error) {
-        statusEl.textContent = 'Erreur de connexion au serveur';
+        statusEl.textContent = currentLang === 'fr' ? 'Erreur serveur' : 'Server error';
         console.error(error);
     }
 }
@@ -228,13 +265,13 @@ function renderTable(tracks) {
 
 function updateStats() {
     if (allTracks.length === 0) {
-        document.getElementById('stat-total').textContent = '0';
-        document.getElementById('stat-artist').textContent = '-';
-        document.getElementById('stat-ratio').textContent = '-';
+        document.getElementById('total-tracks').textContent = '0';
+        document.getElementById('top-count').textContent = '-';
+        document.getElementById('auto-ratio').textContent = '-';
         return;
     }
 
-    document.getElementById('stat-total').textContent = allTracks.length;
+    document.getElementById('total-tracks').textContent = allTracks.length;
 
     const artistCounts = {};
     let topArtist = "-";
@@ -247,11 +284,11 @@ function updateStats() {
             topArtist = t.artist;
         }
     });
-    document.getElementById('stat-artist').textContent = topArtist;
+    document.getElementById('top-count').textContent = topArtist;
 
     const autoCount = allTracks.filter(t => t.type.includes('Auto')).length;
     const ratio = Math.round((autoCount / allTracks.length) * 100);
-    document.getElementById('stat-ratio').textContent = `${ratio}%`;
+    document.getElementById('auto-ratio').textContent = `${ratio}%`;
 }
 
 // Event Listeners
@@ -263,6 +300,10 @@ document.getElementById('settings-toggle').addEventListener('click', openSetting
 document.getElementById('close-settings').addEventListener('click', closeSettings);
 document.getElementById('save-settings').addEventListener('click', saveSettings);
 document.getElementById('hide-owned').addEventListener('change', () => renderTable(allTracks));
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
 
 document.getElementById('pick-folder-btn').addEventListener('click', async () => {
     try {
@@ -381,12 +422,13 @@ async function checkAccess() {
     }
 }
 
-document.getElementById('open-tcc-settings').addEventListener('click', async () => {
+document.getElementById('open-tcc').addEventListener('click', async () => {
     await fetch('/api/open-tcc');
 });
 
 // Initial Init
 initTheme();
+applyTranslations();
 fetchTracks();
 loadSettings();
 checkAccess();
