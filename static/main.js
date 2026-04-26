@@ -387,7 +387,14 @@ function renderTable(tracks) {
                 <div class="source-tag">${track.type}</div>
             </td>
             <td>${hitLabel}</td>
-            <td><img src="${track.cover}" class="cover-img" alt="cover"></td>
+            <td>
+                <div class="cover-container" onclick="playPreview(this, '${track.artist.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${track.title.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${track.cover}')">
+                    <img src="${track.cover}" class="cover-img" alt="cover">
+                    <div class="cover-play-overlay">
+                        <svg class="icon-svg" style="width:20px;height:20px;fill:white;"><use xlink:href="#icon-play"></use></svg>
+                    </div>
+                </div>
+            </td>
             <td>
                 <div class="artist-title">
                     <span class="artist-name">${track.artist}</span>
@@ -617,6 +624,101 @@ async function checkAccess() {
 
 document.getElementById('open-tcc').addEventListener('click', async () => {
     await fetch('/api/open-tcc');
+});
+
+// --- Audio Player Logic ---
+let currentAudio = null;
+let currentContainer = null;
+const playerWidget = document.getElementById('audio-player');
+const playerPlayBtn = document.getElementById('player-play-btn');
+const playerProgressBar = document.getElementById('player-progress-bar');
+const playerIconUse = playerPlayBtn.querySelector('use');
+
+async function playPreview(container, artist, title, cover) {
+    if (currentContainer === container && currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        return;
+    }
+    if (currentContainer === container && currentAudio && currentAudio.paused) {
+        currentAudio.play();
+        return;
+    }
+
+    if (currentAudio) {
+        currentAudio.pause();
+        if (currentContainer) currentContainer.classList.remove('playing');
+        currentAudio.src = "";
+    }
+
+    currentContainer = container;
+    container.classList.add('playing');
+    
+    document.getElementById('player-cover').src = cover;
+    document.getElementById('player-title').textContent = title;
+    document.getElementById('player-artist').textContent = artist;
+    playerWidget.classList.remove('hidden');
+    playerProgressBar.style.width = '0%';
+    playerIconUse.setAttribute('href', '#icon-pause');
+    playerIconUse.setAttribute('xlink:href', '#icon-pause');
+
+    try {
+        const query = encodeURIComponent(`${artist} ${title}`);
+        const response = await fetch(`https://itunes.apple.com/search?term=${query}&entity=song&limit=1`);
+        const data = await response.json();
+
+        if (data.results && data.results.length > 0 && data.results[0].previewUrl) {
+            const previewUrl = data.results[0].previewUrl;
+            
+            currentAudio = new Audio(previewUrl);
+            currentAudio.play();
+
+            currentAudio.addEventListener('timeupdate', () => {
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                playerProgressBar.style.width = `${percent || 0}%`;
+            });
+
+            currentAudio.addEventListener('ended', () => {
+                container.classList.remove('playing');
+                playerIconUse.setAttribute('href', '#icon-play');
+                playerIconUse.setAttribute('xlink:href', '#icon-play');
+                playerProgressBar.style.width = '0%';
+            });
+
+            currentAudio.addEventListener('pause', () => {
+                container.classList.remove('playing');
+                playerIconUse.setAttribute('href', '#icon-play');
+                playerIconUse.setAttribute('xlink:href', '#icon-play');
+            });
+
+            currentAudio.addEventListener('play', () => {
+                container.classList.add('playing');
+                playerIconUse.setAttribute('href', '#icon-pause');
+                playerIconUse.setAttribute('xlink:href', '#icon-pause');
+            });
+
+        } else {
+            console.warn("No preview found for", artist, title);
+            container.classList.remove('playing');
+            playerIconUse.setAttribute('href', '#icon-play');
+            playerIconUse.setAttribute('xlink:href', '#icon-play');
+            // Notification optionnelle
+        }
+    } catch (e) {
+        console.error("Error fetching preview", e);
+        container.classList.remove('playing');
+        playerIconUse.setAttribute('href', '#icon-play');
+        playerIconUse.setAttribute('xlink:href', '#icon-play');
+    }
+}
+
+playerPlayBtn.addEventListener('click', () => {
+    if (currentAudio) {
+        if (currentAudio.paused) {
+            currentAudio.play();
+        } else {
+            currentAudio.pause();
+        }
+    }
 });
 
 // Initial Init
