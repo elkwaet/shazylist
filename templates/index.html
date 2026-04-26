@@ -22,6 +22,7 @@
         <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></symbol>
         <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></symbol>
         <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+        <symbol id="icon-reload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></symbol>
     </svg>
 
     <header class="sticky-header">
@@ -74,7 +75,7 @@
                     </div>
                     <label class="checkbox-filter">
                         <input type="checkbox" id="hide-owned">
-                        <span>Cacher possédés</span>
+                        <span data-i18n="hide_owned">Cacher possédés</span>
                     </label>
                 </div>
 
@@ -141,9 +142,9 @@
                 
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <input type="text" id="new-folder-path" readonly placeholder="Chemin du dossier..." style="flex: 1;">
-                    <button class="btn-secondary" id="pick-folder-btn" style="padding: 0 15px;">Parcourir</button>
+                    <button class="btn-secondary" id="pick-folder-btn" style="padding: 0 15px;" data-i18n="btn_browse">Parcourir</button>
                 </div>
-                <button class="btn-secondary" id="add-folder-btn" style="width:100%; height:44px; margin-top:10px;">Ajouter à la liste</button>
+                <button class="btn-secondary" id="add-folder-btn" style="width:100%; height:44px; margin-top:10px;" data-i18n="btn_add_list">Ajouter à la liste</button>
                 
                 <div id="folder-list" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
