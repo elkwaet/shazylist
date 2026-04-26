@@ -1,4 +1,4 @@
-# Guide Utilisateur - Shazylist
+# Guide utilisateur - Shazylist
 
 Shazylist est ton dashboard personnel pour explorer et exporter tes découvertes Shazam sur macOS.
 
@@ -10,7 +10,7 @@ Shazylist est ton dashboard personnel pour explorer et exporter tes découvertes
    - Fais un **Clic-droit > Ouvrir** sur l'application dans tes Applications (nécessaire car l'app n'est pas signée officiellement).
    - Valide l'ouverture dans la boîte de dialogue macOS.
 
-## Sécurité & Permissions
+## Sécurité & permissions
 
 Pour lire tes morceaux, Shazylist doit pouvoir accéder à la base de données interne de Shazam. macOS protège ces fichiers.
 

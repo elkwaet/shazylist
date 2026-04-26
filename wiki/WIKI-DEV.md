@@ -1,4 +1,4 @@
-# Wiki Développeur - Shazylist
+# Wiki développeur - Shazylist
 
 Documentation technique sur l'architecture et le fonctionnement interne de Shazylist.
 
@@ -11,9 +11,9 @@ L'application est structurée comme une "Lite App" hybride proposant un accès D
 - **Extraction** : SQLite3 avec mode `ro` (Read-Only) pour éviter de verrouiller la DB Shazam.
 - **Frontend** : Vanilla JS / CSS3. Pas de dépendances externes.
 
-## Compilation & Distribution
+## Compilation & distribution
 
-### Mode Desktop (Natif)
+### Mode desktop (natif)
 L'application est packagée en tant qu'exécutable macOS (`.app`) via **PyInstaller**.
 Le lanceur principal est [desktop.py](../desktop.py).
 
@@ -30,9 +30,9 @@ Un script d'automatisation [build_dmg.sh](../build_dmg.sh) utilise `create-dmg` 
 ./build_dmg.sh
 ```
 
-## Gestion de la Donnée
+## Gestion de la donnée
 
-### Base de Données Shazam
+### Base de données Shazam
 Shazam utilise SQLite via Core Data.
 - **Timestamp** : Mac Absolute Time (secondes depuis le 01/01/2001).
 - **Accès** : L'URL SQLite inclut `?mode=ro`.
@@ -44,13 +44,13 @@ Le backend vérifie au démarrage si l'accès à la DB est bloqué par le systè
 - **Thèmes** : Variables CSS avec classe `.light-theme`.
 - **Fenêtre** : Persistance des dimensions enregistrées dans `config.json`.
 
-## Diagnostics et Logs
+## Diagnostics et logs
 Un système de logs a été mis en place pour faciliter le debug en mode production (une fois packagé en `.app`).
 - **Fichier** : `debug.log` (généré à la racine de l'app ou dans le dossier de configuration).
 - **Contenu** : Erreurs Flask, statut de la base de données, cycle de vie de la fenêtre Webview.
 - **Niveau** : DEBUG (en production, il capture les Stack Traces des erreurs fatales).
 
-## Stratégie Git (Double Remote)
+## Stratégie GIT (double remote)
 Le projet utilise une configuration à double-remote pour séparer le développement interne de la distribution Open Source :
 - **`origin` (GitLab - Privé)** : Dépôt par défaut (`git push`). Utilisé pour le travail en cours, les brouillons, et l'historique de développement complet.
 - **`public` (GitHub - Public)** : Dépôt miroir Open Source (`git push public main`). Utilisé uniquement pour publier les versions stables et packagées (Releases) à destination de la communauté.
