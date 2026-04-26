@@ -32,3 +32,4 @@ ENV/
 *.db
 shazam_export.*
 .env
+*.dmg
