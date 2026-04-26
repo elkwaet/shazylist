@@ -1,20 +1,26 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+block_cipher = None
 
 a = Analysis(
     ['desktop.py'],
     pathex=[],
     binaries=[],
-    datas=[('static', 'static'), ('templates', 'templates')],
+    datas=[
+        ('static', 'static'),
+        ('templates', 'templates'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
     noarchive=False,
-    optimize=0,
 )
-pyz = PYZ(a.pure)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
@@ -37,6 +43,7 @@ exe = EXE(
 coll = COLLECT(
     exe,
     a.binaries,
+    a.zipfiles,
     a.datas,
     strip=False,
     upx=True,
@@ -47,5 +54,12 @@ app = BUNDLE(
     coll,
     name='Shazylist.app',
     icon='icon.icns',
-    bundle_identifier=None,
+    bundle_identifier='net.le15.shazylist',
+    info_plist={
+        'CFBundleShortVersionString': '1.0.0',
+        'CFBundleVersion': '1.0.0',
+        'NSHumanReadableCopyright': 'Copyright © 2026 QWASH ENERGY. All rights reserved.',
+        'LSMinimumSystemVersion': '10.13.0',
+        'NSHighResolutionCapable': True,
+    }
 )
