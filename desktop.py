@@ -7,8 +7,12 @@ import json
 import logging
 from app import app, shazam
 
-# Configuration du Logging
-LOG_FILE = 'debug.log'
+# Configuration du Logging (Chemin sécurisé sur macOS)
+log_dir = os.path.expanduser('~/Library/Logs/Shazylist')
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+LOG_FILE = os.path.join(log_dir, 'debug.log')
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.DEBUG,
@@ -18,7 +22,10 @@ logger = logging.getLogger(__name__)
 
 logger.info("Démarrage de Shazylist...")
 
-CONFIG_FILE = 'config.json'
+CONFIG_FILE = os.path.expanduser('~/Library/Application Support/Shazylist/config.json')
+config_dir = os.path.dirname(CONFIG_FILE)
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
 
 def load_window_size():
     """Charge la taille de la fenêtre depuis la config."""
