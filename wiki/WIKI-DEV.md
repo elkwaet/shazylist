@@ -43,9 +43,6 @@ Le backend vérifie au démarrage si l'accès à la DB est bloqué par le systè
 - **Thèmes** : Variables CSS avec classe `.light-theme`.
 - **Fenêtre** : Persistance des dimensions enregistrées dans `config.json`.
 
-## Roadmap & Marketing
-- **Landing Page** : Un [PRD complet](file:///Users/elk/.gemini/antigravity/brain/fe5418b9-5012-49a7-a3e8-a3d8702c0673/PRD-LANDING-PAGE.md) est disponible pour le développement du site vitrine sous Astro.
-
 ## Diagnostics et Logs
 Un système de logs a été mis en place pour faciliter le debug en mode production (une fois packagé en `.app`).
 - **Fichier** : `debug.log` (généré à la racine de l'app ou dans le dossier de configuration).

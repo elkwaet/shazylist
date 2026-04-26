@@ -32,7 +32,7 @@
                     <h1>Shazylist</h1>
                 </div>
 
-                <div class="search-container">
+                <div class="search-box-container">
                     <input type="text" id="search" placeholder="Artiste, titre, style..." data-i18n="search_placeholder">
                     <svg class="search-icon"><use xlink:href="#icon-search"></use></svg>
                 </div>
@@ -122,7 +122,10 @@
     <!-- Modals -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
-            <h2 data-i18n="settings_title">Réglages</h2>
+            <div class="modal-header">
+                <h2 data-i18n="settings_title">Réglages</h2>
+                <button class="close-btn" id="close-settings">&times;</button>
+            </div>
             
             <div class="settings-section">
                 <h3 data-i18n="settings_lang_title">Langue</h3>
