@@ -1,12 +1,13 @@
 # Changelog - Shazylist
 
-## [4.1.0] - 2026-04-26
+## [4.2.0] - 2026-04-26
 ### Added
-- Internationalisation complète (Français/Anglais).
-- Sélecteur de langue dans les réglages.
-- Script de build DMG automatisé (`build_dmg.sh`).
-- Fond visuel pour l'installateur DMG.
-- Licence MIT.
+- **Link Expansion** : Ajout des liens vers Spotify, Apple Music, SoundCloud et Juno Download.
+- **Library Highlighting** : Mise en évidence visuelle (opacité réduite) des morceaux déjà présents dans la bibliothèque locale.
+- **Système de Logs** : Création d'un fichier `debug.log` pour le diagnostic des erreurs en mode desktop.
+- Correction de la fenêtre vide dans l'application compilée (gestion des chemins `sys._MEIPASS`).
+
+## [4.1.0] - 2026-04-26
 
 ## [4.0.0] - 2026-04-25
 ### Added
