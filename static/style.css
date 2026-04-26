@@ -21,6 +21,11 @@ body.dark-theme {
     --header-border-color: #ffffff;
 }
 
+body,
+html {
+    background-color: #f3f3f3;
+}
+
 /* --- RESET & BASE --- */
 * {
     margin: 0;
@@ -41,6 +46,10 @@ body {
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+.flex {
+    display: flex;
 }
 
 /* --- HEADER APPLICATIF --- */
@@ -665,10 +674,18 @@ th.sortable:hover .icon-sort {
 }
 
 footer {
-    padding: 40px 0;
-    text-align: center;
+    padding: 40px 40px 100px 40px;
     color: var(--secondary-text);
     font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1600px;
+    background-color: #f3f3f3;
+}
+
+main.container {
+    min-height: 300px;
 }
 
 @keyframes spin {

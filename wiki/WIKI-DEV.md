@@ -30,6 +30,18 @@ Un script d'automatisation [build_dmg.sh](../build_dmg.sh) utilise `create-dmg` 
 ./build_dmg.sh
 ```
 
+### Publication interactive
+Le script [publish.sh](../publish.sh) permet de gérer le cycle de fin de modification de manière semi-automatique.
+
+**Usage :**
+```bash
+./publish.sh
+```
+Ce script interactif propose :
+1. De recompiler l'application et de générer un nouveau DMG.
+2. De visualiser le statut Git des modifications.
+3. De saisir un message de commit et de pousser les changements sur le dépôt `origin` (GitLab).
+
 ## Gestion de la donnée
 
 ### Base de données Shazam
