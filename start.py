@@ -3,7 +3,7 @@ import csv
 import io
 import os
 import glob
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import urllib.parse
 from collections import Counter
 
@@ -32,7 +32,7 @@ class Shazylist:
         """Convertit le timestamp Core Data (Mac Absolute Time) en datetime Python."""
         if not timestamp:
             return None
-        return datetime(2001, 1, 1) + timedelta(seconds=timestamp)
+        return datetime(2001, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=timestamp)
 
     def fetch_all(self):
         """Récupère tous les morceaux sans filtre (pour calcul de hits global)."""
@@ -51,7 +51,7 @@ class Shazylist:
             print(f"Erreur extraction : {e}")
             return []
 
-    def get_filtered_tracks(self, start_date=None, end_date=None):
+    def get_filtered_tracks(self, start_date=None, end_date=None, start_ts=None, end_ts=None):
         """Récupère et filtre les morceaux selon la plage de dates."""
         rows = self.fetch_all()
         counts = Counter([(r[1], r[0]) for r in rows if r[0] and r[1]])
@@ -65,10 +65,16 @@ class Shazylist:
             date_dt = self.mac_to_datetime(timestamp)
             date_str = date_dt.strftime("%Y-%m-%d") if date_dt else None
 
-            # Filtrage par date
+            # Filtrage par date (chaînes YYYY-MM-DD)
             if start_date and date_str and date_str < start_date:
                 continue
             if end_date and date_str and date_str > end_date:
+                continue
+
+            # Filtrage par timestamp exact (en millisecondes) pour les sessions
+            if start_ts is not None and date_dt and (date_dt.timestamp() * 1000) < start_ts:
+                continue
+            if end_ts is not None and date_dt and (date_dt.timestamp() * 1000) >= end_ts:
                 continue
 
             hits = counts.get((artist, title), 1)
@@ -96,8 +102,8 @@ class Shazylist:
         self.tracks = filtered # Mémorise pour les exports
         return filtered
 
-    def export_csv(self, start_date=None, end_date=None):
-        tracks = self.get_filtered_tracks(start_date, end_date)
+    def export_csv(self, start_date=None, end_date=None, start_ts=None, end_ts=None):
+        tracks = self.get_filtered_tracks(start_date, end_date, start_ts, end_ts)
         if not tracks:
             return ""
         
@@ -117,8 +123,8 @@ class Shazylist:
         dict_writer.writerows(flattened)
         return output.getvalue()
 
-    def export_txt(self, start_date=None, end_date=None):
-        tracks = self.get_filtered_tracks(start_date, end_date)
+    def export_txt(self, start_date=None, end_date=None, start_ts=None, end_ts=None):
+        tracks = self.get_filtered_tracks(start_date, end_date, start_ts, end_ts)
         if not tracks:
             return ""
         

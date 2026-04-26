@@ -24,10 +24,18 @@ if not os.path.exists(config_dir):
     os.makedirs(config_dir, exist_ok=True)
 
 def load_config():
+    config = {"music_folders": [], "sessions": []}
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "r") as f:
-            return json.load(f)
-    return {"music_folders": []}
+            try:
+                loaded = json.load(f)
+                config.update(loaded)
+            except json.JSONDecodeError:
+                pass
+    # Assurer que "sessions" existe toujours
+    if "sessions" not in config:
+        config["sessions"] = []
+    return config
 
 def save_config(config):
     with open(CONFIG_FILE, "w") as f:
@@ -45,9 +53,11 @@ def index():
 def get_tracks():
     start_date = request.args.get('start')
     end_date = request.args.get('end')
+    start_ts = request.args.get('start_ts', type=float)
+    end_ts = request.args.get('end_ts', type=float)
     
     try:
-        tracks = shazam.get_filtered_tracks(start_date, end_date)
+        tracks = shazam.get_filtered_tracks(start_date, end_date, start_ts, end_ts)
         for track in tracks:
             track['in_library'] = scanner.is_in_library(track['artist'], track['title'])
         return jsonify(tracks)
@@ -101,11 +111,50 @@ def settings():
         return jsonify({"status": "success", "files_indexed": count})
     return jsonify(config)
 
+@app.route('/api/sessions', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def api_sessions():
+    config = load_config()
+    sessions = config.get("sessions", [])
+
+    if request.method == 'GET':
+        # Trier par timestamp descendant (plus récent en premier)
+        sessions.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
+        return jsonify(sessions)
+
+    elif request.method == 'POST':
+        # Créer une nouvelle session
+        new_session = request.json
+        sessions.append(new_session)
+        config["sessions"] = sessions
+        save_config(config)
+        return jsonify({"status": "success", "session": new_session})
+
+    elif request.method == 'PUT':
+        # Renommer une session
+        session_id = request.json.get("id")
+        new_name = request.json.get("name")
+        for s in sessions:
+            if s.get("id") == session_id:
+                s["name"] = new_name
+                break
+        config["sessions"] = sessions
+        save_config(config)
+        return jsonify({"status": "success"})
+
+    elif request.method == 'DELETE':
+        # Supprimer une session via JSON body (ex: {"id": "123"})
+        session_id = request.json.get("id")
+        config["sessions"] = [s for s in sessions if s.get("id") != session_id]
+        save_config(config)
+        return jsonify({"status": "success"})
+
 @app.route('/export/csv')
 def export_csv():
     start_date = request.args.get('start')
     end_date = request.args.get('end')
-    csv_data = shazam.export_csv(start_date, end_date)
+    start_ts = request.args.get('start_ts', type=float)
+    end_ts = request.args.get('end_ts', type=float)
+    csv_data = shazam.export_csv(start_date, end_date, start_ts, end_ts)
     return Response(
         csv_data,
         mimetype="text/csv",
@@ -116,7 +165,9 @@ def export_csv():
 def export_txt():
     start_date = request.args.get('start')
     end_date = request.args.get('end')
-    txt_data = shazam.export_txt(start_date, end_date)
+    start_ts = request.args.get('start_ts', type=float)
+    end_ts = request.args.get('end_ts', type=float)
+    txt_data = shazam.export_txt(start_date, end_date, start_ts, end_ts)
     return Response(
         txt_data,
         mimetype="text/plain",

@@ -53,6 +53,14 @@
 
             <div class="toolbar">
                 <div class="toolbar-left">
+                    <div class="session-filter" style="display: flex; align-items: center; gap: 5px; margin-right: 15px; border-right: 2px solid var(--border); padding-right: 15px;">
+                        <select id="session-select" style="padding: 4px 8px; font-family: inherit; font-size: 13px; border: 2px solid var(--text); border-radius: 4px; background: var(--bg); color: var(--text); cursor: pointer; min-width: 140px;">
+                            <option value="" data-i18n="opt_all_sessions">Toutes les sessions</option>
+                        </select>
+                        <button id="btn-new-session" class="btn-secondary" style="padding: 4px 8px; font-size: 12px; height: auto; display: flex; align-items: center; justify-content: center;" title="Nouvelle session"><svg class="icon-svg" style="width:14px;height:14px;"><use xlink:href="#icon-plus"></use></svg></button>
+                        <button id="btn-rename-session" class="btn-secondary" style="padding: 4px 8px; font-size: 12px; height: auto; display: none; align-items: center; justify-content: center;" title="Renommer">✎</button>
+                        <button id="btn-delete-session" class="btn-secondary" style="padding: 4px 8px; font-size: 12px; height: auto; display: none; align-items: center; justify-content: center; color: #ff4757;" title="Supprimer"><svg class="icon-svg" style="width:14px;height:14px;"><use xlink:href="#icon-trash"></use></svg></button>
+                    </div>
                     <div class="date-filter">
                         <input type="date" id="date-start">
                         <span class="sep">→</span>

@@ -59,7 +59,122 @@ function setLanguage(lang) {
         currentLang = lang;
         localStorage.setItem('lang', lang);
         applyTranslations();
+        renderSessionSelect(); // Update "Toutes les sessions" text
         fetchTracks(); // Recharge pour mettre à jour les statuts/textes dynamiques
+    }
+}
+
+// Sessions Management
+let allSessions = [];
+
+async function loadSessions() {
+    try {
+        const response = await fetch('/api/sessions');
+        allSessions = await response.json();
+        renderSessionSelect();
+    } catch (error) {
+        console.error('Erreur chargement sessions:', error);
+    }
+}
+
+function renderSessionSelect() {
+    const select = document.getElementById('session-select');
+    const btnRename = document.getElementById('btn-rename-session');
+    const btnDelete = document.getElementById('btn-delete-session');
+    if (!select) return;
+    
+    const currentVal = select.value;
+    const dict = translations[currentLang];
+    
+    select.innerHTML = `<option value="">${dict.opt_all_sessions || 'Toutes les sessions'}</option>`;
+    
+    allSessions.forEach(session => {
+        const option = document.createElement('option');
+        option.value = session.id;
+        option.textContent = session.name;
+        select.appendChild(option);
+    });
+    
+    // Restore selection if it still exists
+    if (allSessions.find(s => String(s.id) === String(currentVal))) {
+        select.value = currentVal;
+        btnRename.style.display = 'flex';
+        btnDelete.style.display = 'flex';
+    } else {
+        select.value = "";
+        btnRename.style.display = 'none';
+        btnDelete.style.display = 'none';
+    }
+}
+
+async function createSession() {
+    const now = new Date();
+    const defaultName = `Session ${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+    
+    const newSession = {
+        id: Date.now().toString(),
+        name: defaultName,
+        timestamp: Date.now()
+    };
+    
+    try {
+        const res = await fetch('/api/sessions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newSession)
+        });
+        if (res.ok) {
+            await loadSessions();
+            document.getElementById('session-select').value = newSession.id;
+            document.getElementById('session-select').dispatchEvent(new Event('change'));
+        }
+    } catch (e) {
+        console.error("Erreur création session", e);
+    }
+}
+
+async function renameSession() {
+    const select = document.getElementById('session-select');
+    const sessionId = select.value;
+    if (!sessionId) return;
+    
+    const session = allSessions.find(s => String(s.id) === String(sessionId));
+    const newName = prompt("Nouveau nom pour la session :", session.name);
+    if (newName && newName.trim() !== "" && newName !== session.name) {
+        try {
+            const res = await fetch('/api/sessions', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: sessionId, name: newName.trim() })
+            });
+            if (res.ok) {
+                await loadSessions();
+            }
+        } catch (e) {
+            console.error("Erreur renommage", e);
+        }
+    }
+}
+
+async function deleteSession() {
+    const select = document.getElementById('session-select');
+    const sessionId = select.value;
+    if (!sessionId) return;
+    
+    if (confirm("Supprimer cette session ? (Les morceaux ne seront pas supprimés de la DB)")) {
+        try {
+            const res = await fetch('/api/sessions', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: sessionId })
+            });
+            if (res.ok) {
+                await loadSessions();
+                select.dispatchEvent(new Event('change'));
+            }
+        } catch (e) {
+            console.error("Erreur suppression", e);
+        }
     }
 }
 
@@ -157,6 +272,25 @@ async function fetchTracks(isReload = false) {
     const exportTxt = document.querySelector('a[href*="/export/txt"]');
     
     let queryParams = `?start=${start}&end=${end}`;
+    
+    const sessionSelect = document.getElementById('session-select');
+    if (sessionSelect && sessionSelect.value) {
+        const sessionId = sessionSelect.value;
+        const idx = allSessions.findIndex(s => String(s.id) === String(sessionId));
+        if (idx !== -1) {
+            const currentSession = allSessions[idx];
+            const nextSession = idx > 0 ? allSessions[idx - 1] : null;
+            
+            const startTs = currentSession.timestamp;
+            const endTs = nextSession ? nextSession.timestamp : '';
+            
+            queryParams += `&start_ts=${startTs}`;
+            if (endTs) {
+                queryParams += `&end_ts=${endTs}`;
+            }
+        }
+    }
+
     if (exportCsv) exportCsv.href = `/export/csv${queryParams}`;
     if (exportTxt) exportTxt.href = `/export/txt${queryParams}`;
 
@@ -308,10 +442,39 @@ function updateStats() {
 document.getElementById('search')?.addEventListener('input', () => renderTable(allTracks));
 document.getElementById('date-start')?.addEventListener('change', () => {
     document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('session-select').value = '';
+    document.getElementById('btn-rename-session').style.display = 'none';
+    document.getElementById('btn-delete-session').style.display = 'none';
     fetchTracks();
 });
 document.getElementById('date-end')?.addEventListener('change', () => {
     document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('session-select').value = '';
+    document.getElementById('btn-rename-session').style.display = 'none';
+    document.getElementById('btn-delete-session').style.display = 'none';
+    fetchTracks();
+});
+
+// Session Listeners
+document.getElementById('btn-new-session')?.addEventListener('click', createSession);
+document.getElementById('btn-rename-session')?.addEventListener('click', renameSession);
+document.getElementById('btn-delete-session')?.addEventListener('click', deleteSession);
+document.getElementById('session-select')?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    const btnRename = document.getElementById('btn-rename-session');
+    const btnDelete = document.getElementById('btn-delete-session');
+    
+    if (val) {
+        btnRename.style.display = 'flex';
+        btnDelete.style.display = 'flex';
+        // Clear standard date filters
+        document.getElementById('date-start').value = '';
+        document.getElementById('date-end').value = '';
+        document.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('active'));
+    } else {
+        btnRename.style.display = 'none';
+        btnDelete.style.display = 'none';
+    }
     fetchTracks();
 });
 document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
@@ -377,6 +540,12 @@ document.querySelectorAll('.shortcut-btn').forEach(btn => {
             startInput.value = '';
             endInput.value = '';
         }
+        
+        // Reset session
+        document.getElementById('session-select').value = '';
+        document.getElementById('btn-rename-session').style.display = 'none';
+        document.getElementById('btn-delete-session').style.display = 'none';
+        
         fetchTracks();
     });
 });
@@ -453,6 +622,7 @@ document.getElementById('open-tcc').addEventListener('click', async () => {
 // Initial Init
 initTheme();
 applyTranslations();
+loadSessions(); // Lancer le fetch des sessions
 fetchTracks();
 loadSettings();
 checkAccess();
