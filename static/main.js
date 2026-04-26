@@ -396,14 +396,14 @@ function renderTable(tracks) {
                 </div>
             </td>
             <td class="links">
-                <a href="${track.links.beatport}" target="_blank" title="Beatport">BP</a>
-                <a href="${track.links.traxsource}" target="_blank" title="Traxsource">TX</a>
-                <a href="${track.links.junodownload}" target="_blank" title="Juno">JD</a>
-                <a href="${track.links.spotify}" target="_blank" title="Spotify">SP</a>
-                <a href="${track.links.apple}" target="_blank" title="Apple Music">AM</a>
-                <a href="${track.links.soundcloud}" target="_blank" title="SoundCloud">SC</a>
-                <a href="${track.links.youtube}" target="_blank" title="YouTube">YT</a>
-                <a href="${track.links.google}" target="_blank" title="Google">G</a>
+                <a href="${track.links.beatport}" target="_blank" title="Beatport"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-beatport"></use></svg></a>
+                <a href="${track.links.traxsource}" target="_blank" title="Traxsource" style="font-weight:bold; font-size:12px; text-decoration:none;">TX</a>
+                <a href="${track.links.junodownload}" target="_blank" title="Juno" style="font-weight:bold; font-size:12px; text-decoration:none;">JD</a>
+                <a href="${track.links.spotify}" target="_blank" title="Spotify"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-spotify"></use></svg></a>
+                <a href="${track.links.apple}" target="_blank" title="Apple Music"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-apple"></use></svg></a>
+                <a href="${track.links.soundcloud}" target="_blank" title="SoundCloud"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-soundcloud"></use></svg></a>
+                <a href="${track.links.youtube}" target="_blank" title="YouTube"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-youtube"></use></svg></a>
+                <a href="${track.links.google}" target="_blank" title="Google"><svg class="icon-inline" style="width:16px;height:16px;"><use xlink:href="#icon-google"></use></svg></a>
             </td>
         `;
         body.appendChild(tr);
