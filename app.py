@@ -17,7 +17,11 @@ else:
 shazam = Shazylist()
 scanner = LocalScanner()
 
-CONFIG_FILE = "config.json"
+CONFIG_FILE = os.path.expanduser('~/Library/Application Support/Shazylist/config.json')
+# Création du dossier si inexistant (pour les imports directs)
+config_dir = os.path.dirname(CONFIG_FILE)
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir, exist_ok=True)
 
 def load_config():
     if os.path.exists(CONFIG_FILE):

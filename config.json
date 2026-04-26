@@ -1,5 +1,9 @@
 {
     "music_folders": [
         "/Users/qwash/Music/BANK-SONS/EN_VRAC/"
+    ],
+    "window_size": [
+        1200.0,
+        800.0
     ]
 }
