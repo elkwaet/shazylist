@@ -4,9 +4,10 @@ Documentation technique sur l'architecture et le fonctionnement interne de Shazy
 
 ## Architecture
 
-L'application est structurée comme une "Lite App" hybride :
+L'application est structurée comme une "Lite App" hybride proposant un accès Double Mode :
+- **Mode Bureau (Natif)** : `desktop.py` encapsule l'UI dans une fenêtre WebKit native macOS via `pywebview` tout en lançant le moteur sur le port 5050.
+- **Mode Navigateur (Web)** : Accessible en simultané via `http://localhost:5050` si l'app est ouverte, ou démarrable de manière isolée via `python3 app.py`.
 - **Backend** : Flask (Python 3.12).
-- **Native Wrapper** : `pywebview` pour l'encapsulation WebKit native macOS.
 - **Extraction** : SQLite3 avec mode `ro` (Read-Only) pour éviter de verrouiller la DB Shazam.
 - **Frontend** : Vanilla JS / CSS3. Pas de dépendances externes.
 
