@@ -87,7 +87,10 @@ class Shazylist:
                     "beatport": f"https://www.beatport.com/search?q={query_str}",
                     "traxsource": f"https://www.traxsource.com/search?term={query_str}",
                     "junodownload": f"https://www.junodownload.com/search/?q={query_str}",
-                    "youtube": f"https://www.youtube.com/results?search_query={query_str}"
+                    "youtube": f"https://www.youtube.com/results?search_query={query_str}",
+                    "spotify": f"https://open.spotify.com/search/{query_str}",
+                    "apple": f"https://music.apple.com/search?term={query_str}",
+                    "soundcloud": f"https://soundcloud.com/search?q={query_str}"
                 }
             })
         

@@ -210,6 +210,15 @@ th.sortable:hover .icon-sort { opacity: 1; }
     border-color: var(--text-color);
 }
 
+.row-owned {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.row-owned:hover {
+    opacity: 1;
+}
+
 .btn-save:disabled {
     opacity: 0.7;
     cursor: wait;

@@ -4,7 +4,19 @@ import os
 import time
 import sys
 import json
+import logging
 from app import app, shazam
+
+# Configuration du Logging
+LOG_FILE = 'debug.log'
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+logger.info("Démarrage de Shazylist...")
 
 CONFIG_FILE = 'config.json'
 
@@ -37,18 +49,26 @@ def save_window_size(window):
 
 def start_flask():
     """Démarre le serveur Flask sur un port fixe."""
-    app.run(port=5050, debug=False, threaded=True)
+    try:
+        logger.info("Serveur Flask en cours de démarrage sur le port 5050...")
+        app.run(port=5050, debug=False, threaded=True)
+    except Exception as e:
+        logger.error(f"Erreur fatale du serveur Flask : {e}", exc_info=True)
 
 def check_permissions():
     """Vérifie si la base Shazam est accessible."""
     db_path = shazam.db_path
+    logger.info(f"Vérification des permissions pour la base : {db_path}")
     if not db_path or not os.path.exists(db_path):
+        logger.warning("Base de données introuvable ou chemin vide.")
         return False
     try:
         with open(db_path, 'rb') as f:
             f.read(10)
+        logger.info("Accès à la base de données accordé.")
         return True
-    except Exception:
+    except Exception as e:
+        logger.error(f"Accès à la base refusé ou erreur : {e}")
         return False
 
 if __name__ == '__main__':
@@ -74,5 +94,7 @@ if __name__ == '__main__':
         background_color='#000000'
     )
 
+    logger.info("Fenêtre Webview créée, démarrage de l'interface...")
     # Sauvegarde à la fermeture
     webview.start(save_window_size, window)
+    logger.info("Application fermée.")

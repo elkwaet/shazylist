@@ -1,11 +1,19 @@
 import os
+import sys
 import json
 import subprocess
 from flask import Flask, render_template, jsonify, request, Response
 from start import Shazylist
 from scanner import LocalScanner
 
-app = Flask(__name__)
+# Configuration des chemins pour PyInstaller (mode frozen)
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys._MEIPASS, 'templates')
+    static_folder = os.path.join(sys._MEIPASS, 'static')
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+else:
+    app = Flask(__name__)
+
 shazam = Shazylist()
 scanner = LocalScanner()
 
