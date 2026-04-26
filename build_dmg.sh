@@ -27,9 +27,9 @@ create-dmg \
   --window-pos 200 120 \
   --window-size 600 400 \
   --icon-size 100 \
-  --icon "${APP_NAME}.app" 150 180 \
+  --icon "${APP_NAME}.app" 150 200 \
   --hide-extension "${APP_NAME}.app" \
-  --app-drop-link 450 180 \
+  --app-drop-link 450 200 \
   "${DMG_NAME}" \
   "dist/"
 
