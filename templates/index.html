@@ -105,14 +105,8 @@
             <table id="tracks-table">
                 <thead>
                     <tr>
-                        <th class="sortable" data-sort="date">
-                            <span data-i18n="col_date">Date</span>
-                            <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg>
-                        </th>
-                        <th class="sortable" data-sort="hits">
-                            <span data-i18n="col_hits">Hits</span>
-                            <svg class="icon-sort"><use xlink:href="#icon-sort"></use></svg>
-                        </th>
+                        <th class="sortable" data-sort="date" data-i18n="col_date">Date</th>
+                        <th class="sortable" data-sort="hits" data-i18n="col_hits">Hits</th>
                         <th></th>
                         <th data-i18n="col_artist">Artiste & Titre</th>
                         <th data-i18n="col_actions">Actions</th>
@@ -157,24 +151,6 @@
                 <button id="theme-toggle" class="btn-secondary" style="width:100%; height:44px;">
                     <span id="theme-icon">🌙</span>
                 </button>
-            </div>
-
-            <div class="settings-about">
-                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
-                <div style="text-align: center;">
-                    <img src="static/icon.png" width="48" style="margin-bottom: 10px;">
-                    <h3 style="font-size: 14px; margin-bottom: 5px;">Shazylist <span style="opacity: 0.5; font-size: 10px;">v1.0.0</span></h3>
-                    <p style="font-size: 11px; color: var(--secondary-text); margin-bottom: 15px;" data-i18n="about_desc">Dashboard d'analyse et d'export pour les DJ.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
-                        <div><strong data-i18n="about_author">Auteur</strong> : <span style="font-weight: 800;">QWASH ENERGY</span></div>
-                        <div><strong>Licence</strong> : MIT (Libre)</div>
-                        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 5px;">
-                            <a href="https://shazylist.le15.net" target="_blank" style="color: var(--text-color); font-weight: 800; text-decoration: none;">Website</a>
-                            <a href="https://gitlab.com/elkwaet/shazylist" target="_blank" style="color: var(--text-color); font-weight: 800; text-decoration: none;">Contribution</a>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <button class="btn-save" id="save-settings" data-i18n="btn_save">Enregistrer</button>
