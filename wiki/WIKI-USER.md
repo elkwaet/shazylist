@@ -1,8 +1,8 @@
-# 📖 Guide Utilisateur - Shazylist
+# Guide Utilisateur - Shazylist
 
 Shazylist est ton dashboard personnel pour explorer et exporter tes découvertes Shazam sur macOS.
 
-## 📥 Installation
+## Installation
 
 1. **Téléchargement** : Récupère le fichier `Shazylist-Installer.dmg`.
 2. **Installation** : Ouvre le fichier et glisse l'icône **Shazylist** dans le dossier **Applications**.
@@ -10,7 +10,7 @@ Shazylist est ton dashboard personnel pour explorer et exporter tes découvertes
    - Fais un **Clic-droit > Ouvrir** sur l'application dans tes Applications (nécessaire car l'app n'est pas signée officiellement).
    - Valide l'ouverture dans la boîte de dialogue macOS.
 
-## 🛡️ Sécurité & Permissions
+## Sécurité & Permissions
 
 Pour lire tes morceaux, Shazylist doit pouvoir accéder à la base de données interne de Shazam. macOS protège ces fichiers.
 
@@ -20,7 +20,7 @@ Pour lire tes morceaux, Shazylist doit pouvoir accéder à la base de données i
 3. Ajoute **Shazylist** à la liste et coche la case.
 4. Redémarre Shazylist.
 
-## 🎧 Fonctionnalités
+## Fonctionnalités
 
 - **Recherche** : Filtre instantanément par artiste ou titre.
 - **Top Hits** : Identifie les morceaux que tu as shazamé le plus souvent.
@@ -28,6 +28,6 @@ Pour lire tes morceaux, Shazylist doit pouvoir accéder à la base de données i
 - **Exports** : Génère des listes propres en TXT ou CSV pour tes sets DJ.
 - **Liens Rapides** : Accède directement à Beatport, Traxsource ou YouTube depuis ton dashboard.
 
-## ⌨️ Raccourcis
+## Raccourcis
 - `Cmd + ,` : Ouvrir les réglages.
 - `Echap` : Fermer les modales.
