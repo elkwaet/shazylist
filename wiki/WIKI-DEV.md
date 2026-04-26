@@ -49,3 +49,8 @@ Un système de logs a été mis en place pour faciliter le debug en mode product
 - **Fichier** : `debug.log` (généré à la racine de l'app ou dans le dossier de configuration).
 - **Contenu** : Erreurs Flask, statut de la base de données, cycle de vie de la fenêtre Webview.
 - **Niveau** : DEBUG (en production, il capture les Stack Traces des erreurs fatales).
+
+## Stratégie Git (Double Remote)
+Le projet utilise une configuration à double-remote pour séparer le développement interne de la distribution Open Source :
+- **`origin` (GitLab - Privé)** : Dépôt par défaut (`git push`). Utilisé pour le travail en cours, les brouillons, et l'historique de développement complet.
+- **`public` (GitHub - Public)** : Dépôt miroir Open Source (`git push public main`). Utilisé uniquement pour publier les versions stables et packagées (Releases) à destination de la communauté.
