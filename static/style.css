@@ -781,6 +781,17 @@ body.dark-theme .player-widget {
     transition: width 0.1s linear;
 }
 
+.player-close-action {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    border-left: 1px solid var(--border-color);
+}
+
+.player-close-action button:hover {
+    color: #ff4757;
+}
+
 /* Cover Hover in Table */
 .cover-container {
     position: relative;

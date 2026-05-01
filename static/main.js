@@ -665,6 +665,13 @@ async function playPreview(container, artist, title, cover) {
         currentAudio.src = "";
     }
 
+    if (container === null) {
+        playerWidget.classList.add('hidden');
+        currentContainer = null;
+        currentAudio = null;
+        return;
+    }
+
     currentContainer = container;
     container.classList.add('playing');
     
@@ -734,6 +741,10 @@ playerPlayBtn.addEventListener('click', () => {
             currentAudio.pause();
         }
     }
+});
+
+document.getElementById('player-close-btn').addEventListener('click', () => {
+    playPreview(null);
 });
 
 // Initial Init

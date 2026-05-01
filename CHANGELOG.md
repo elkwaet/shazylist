@@ -1,5 +1,10 @@
 # Changelog - Shazylist
 
+## [4.2.2] - 2026-05-01
+### Added
+- **Player Widget** : Ajout d'un bouton de fermeture (X) pour masquer le lecteur et libérer les ressources audio.
+- **Gestion Audio** : Amélioration du nettoyage des instances audio lors de la fermeture ou du changement de morceau.
+
 ## [4.2.1] - 2026-05-01
 ### Fixed
 - **Exportation Desktop** : Correction d'un bug où les boutons d'exportation TXT/CSV affichaient le contenu brut au lieu de télécharger le fichier dans l'application Desktop. Les exports s'ouvrent désormais dans le navigateur système pour garantir le téléchargement.
