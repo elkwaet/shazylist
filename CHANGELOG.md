@@ -1,5 +1,9 @@
 # Changelog - Shazylist
 
+## [4.2.1] - 2026-05-01
+### Fixed
+- **Exportation Desktop** : Correction d'un bug où les boutons d'exportation TXT/CSV affichaient le contenu brut au lieu de télécharger le fichier dans l'application Desktop. Les exports s'ouvrent désormais dans le navigateur système pour garantir le téléchargement.
+
 ## [4.2.0] - 2026-04-26
 ### Added
 - **Link Expansion** : Ajout des liens vers Spotify, Apple Music, SoundCloud et Juno Download.

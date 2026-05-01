@@ -294,6 +294,21 @@ async function fetchTracks(isReload = false) {
     if (exportCsv) exportCsv.href = `/export/csv${queryParams}`;
     if (exportTxt) exportTxt.href = `/export/txt${queryParams}`;
 
+    // Fix for Desktop app (PyWebView): 
+    // Force download links to open in external browser or use window.open
+    // because internal WKWebView doesn't handle downloads automatically.
+    [exportCsv, exportTxt].forEach(el => {
+        if (el && !el.dataset.listenerAttached) {
+            el.addEventListener('click', (e) => {
+                if (window.pywebview) {
+                    e.preventDefault();
+                    window.open(el.href, '_blank');
+                }
+            });
+            el.dataset.listenerAttached = "true";
+        }
+    });
+
     try {
         const response = await fetch(`/api/tracks${queryParams}`);
         allTracks = await response.json();
