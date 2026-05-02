@@ -23,9 +23,14 @@ function toggleTheme() {
     
     // Update Wavesurfer colors if initialized
     if (wavesurfer) {
+        const ctx = document.createElement('canvas').getContext('2d');
+        const polyGradient = ctx.createLinearGradient(0, 0, 0, 40);
+        polyGradient.addColorStop(0, '#ff1e22');
+        polyGradient.addColorStop(1, '#ff8a8d');
+
         wavesurfer.setOptions({
             waveColor: isDark ? '#444' : '#ccc',
-            progressColor: isDark ? '#fff' : '#000',
+            progressColor: polyGradient,
             cursorColor: isDark ? '#fff' : '#000',
         });
     }
@@ -659,10 +664,17 @@ const playerIconUse = playerPlayBtn.querySelector('use');
 
 function initWavesurfer() {
     const isDark = document.body.classList.contains('dark-theme');
+    
+    // Create gradient for progress
+    const ctx = document.createElement('canvas').getContext('2d');
+    const polyGradient = ctx.createLinearGradient(0, 0, 0, 40);
+    polyGradient.addColorStop(0, '#ff1e22'); // Shazylist Red
+    polyGradient.addColorStop(1, '#ff8a8d'); // Lighter Red
+
     wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: isDark ? '#444' : '#ccc',
-        progressColor: isDark ? '#fff' : '#000',
+        progressColor: polyGradient,
         cursorColor: isDark ? '#fff' : '#000',
         barWidth: 2,
         barRadius: 3,
