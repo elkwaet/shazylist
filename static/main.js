@@ -320,7 +320,16 @@ async function fetchTracks(isReload = false) {
                     try {
                         const res = await fetch(url);
                         const content = await res.text();
-                        const filename = `shazylist_export.${item.format}`;
+                        
+                        // Génération du timestamp pour le nom de fichier
+                        const now = new Date();
+                        const ts = now.getFullYear() + 
+                                   String(now.getMonth() + 1).padStart(2, '0') + 
+                                   String(now.getDate()).padStart(2, '0') + "_" + 
+                                   String(now.getHours()).padStart(2, '0') + 
+                                   String(now.getMinutes()).padStart(2, '0');
+                        
+                        const filename = `shazylist_export_${ts}.${item.format}`;
                         const success = await window.pywebview.api.save_file(content, filename);
                         if (success) {
                             console.log(`Export ${item.format.toUpperCase()} natif réussi.`);

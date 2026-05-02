@@ -85,9 +85,10 @@ class Api:
     def save_file(self, content, filename):
         if not hasattr(self, 'window') or not self.window:
             return False
+        # create_file_dialog avec SAVE_DIALOG renvoie une chaîne (le chemin) ou None
         result = self.window.create_file_dialog(webview.SAVE_DIALOG, save_filename=filename)
         if result:
-            file_path = result[0]
+            file_path = result
             try:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(content)
