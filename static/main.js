@@ -20,6 +20,15 @@ function toggleTheme() {
     const isDark = document.body.classList.toggle('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     updateThemeIcon(!isDark);
+    
+    // Update Wavesurfer colors if initialized
+    if (wavesurfer) {
+        wavesurfer.setOptions({
+            waveColor: isDark ? '#444' : '#ccc',
+            progressColor: isDark ? '#fff' : '#000',
+            cursorColor: isDark ? '#fff' : '#000',
+        });
+    }
 }
 
 function updateThemeIcon(isLight) {
@@ -642,33 +651,68 @@ document.getElementById('open-tcc').addEventListener('click', async () => {
 });
 
 // --- Audio Player Logic ---
-let currentAudio = null;
+let wavesurfer = null;
 let currentContainer = null;
 const playerWidget = document.getElementById('audio-player');
 const playerPlayBtn = document.getElementById('player-play-btn');
-const playerProgressBar = document.getElementById('player-progress-bar');
 const playerIconUse = playerPlayBtn.querySelector('use');
 
+function initWavesurfer() {
+    const isDark = document.body.classList.contains('dark-theme');
+    wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: isDark ? '#444' : '#ccc',
+        progressColor: isDark ? '#fff' : '#000',
+        cursorColor: isDark ? '#fff' : '#000',
+        barWidth: 2,
+        barRadius: 3,
+        cursorWidth: 1,
+        height: 40,
+        barGap: 3,
+        normalize: true
+    });
+
+    wavesurfer.on('play', () => {
+        playerIconUse.setAttribute('href', '#icon-pause');
+        playerIconUse.setAttribute('xlink:href', '#icon-pause');
+        if (currentContainer) currentContainer.classList.add('playing');
+    });
+
+    wavesurfer.on('pause', () => {
+        playerIconUse.setAttribute('href', '#icon-play');
+        playerIconUse.setAttribute('xlink:href', '#icon-play');
+        if (currentContainer) currentContainer.classList.remove('playing');
+    });
+
+    wavesurfer.on('finish', () => {
+        if (currentContainer) currentContainer.classList.remove('playing');
+        playerIconUse.setAttribute('href', '#icon-play');
+        playerIconUse.setAttribute('xlink:href', '#icon-play');
+    });
+}
+
 async function playPreview(container, artist, title, cover) {
-    if (currentContainer === container && currentAudio && !currentAudio.paused) {
-        currentAudio.pause();
+    if (!wavesurfer) initWavesurfer();
+
+    if (currentContainer === container && wavesurfer.isPlaying()) {
+        wavesurfer.pause();
         return;
     }
-    if (currentContainer === container && currentAudio && currentAudio.paused) {
-        currentAudio.play();
+    if (currentContainer === container && !wavesurfer.isPlaying() && wavesurfer.getDuration() > 0) {
+        wavesurfer.play();
         return;
     }
 
-    if (currentAudio) {
-        currentAudio.pause();
-        if (currentContainer) currentContainer.classList.remove('playing');
-        currentAudio.src = "";
+    if (wavesurfer.isPlaying()) {
+        wavesurfer.pause();
     }
+    
+    if (currentContainer) currentContainer.classList.remove('playing');
 
     if (container === null) {
         playerWidget.classList.add('hidden');
         currentContainer = null;
-        currentAudio = null;
+        wavesurfer.stop();
         return;
     }
 
@@ -679,9 +723,9 @@ async function playPreview(container, artist, title, cover) {
     document.getElementById('player-title').textContent = title;
     document.getElementById('player-artist').textContent = artist;
     playerWidget.classList.remove('hidden');
-    playerProgressBar.style.width = '0%';
-    playerIconUse.setAttribute('href', '#icon-pause');
-    playerIconUse.setAttribute('xlink:href', '#icon-pause');
+    
+    playerIconUse.setAttribute('href', '#icon-play'); // Show play while loading
+    playerIconUse.setAttribute('xlink:href', '#icon-play');
 
     try {
         const query = encodeURIComponent(`${artist} ${title}`);
@@ -691,55 +735,21 @@ async function playPreview(container, artist, title, cover) {
         if (data.results && data.results.length > 0 && data.results[0].previewUrl) {
             const previewUrl = data.results[0].previewUrl;
             
-            currentAudio = new Audio(previewUrl);
-            currentAudio.play();
-
-            currentAudio.addEventListener('timeupdate', () => {
-                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
-                playerProgressBar.style.width = `${percent || 0}%`;
-            });
-
-            currentAudio.addEventListener('ended', () => {
-                container.classList.remove('playing');
-                playerIconUse.setAttribute('href', '#icon-play');
-                playerIconUse.setAttribute('xlink:href', '#icon-play');
-                playerProgressBar.style.width = '0%';
-            });
-
-            currentAudio.addEventListener('pause', () => {
-                container.classList.remove('playing');
-                playerIconUse.setAttribute('href', '#icon-play');
-                playerIconUse.setAttribute('xlink:href', '#icon-play');
-            });
-
-            currentAudio.addEventListener('play', () => {
-                container.classList.add('playing');
-                playerIconUse.setAttribute('href', '#icon-pause');
-                playerIconUse.setAttribute('xlink:href', '#icon-pause');
-            });
-
+            await wavesurfer.load(previewUrl);
+            wavesurfer.play();
         } else {
             console.warn("No preview found for", artist, title);
             container.classList.remove('playing');
-            playerIconUse.setAttribute('href', '#icon-play');
-            playerIconUse.setAttribute('xlink:href', '#icon-play');
-            // Notification optionnelle
         }
     } catch (e) {
         console.error("Error fetching preview", e);
         container.classList.remove('playing');
-        playerIconUse.setAttribute('href', '#icon-play');
-        playerIconUse.setAttribute('xlink:href', '#icon-play');
     }
 }
 
 playerPlayBtn.addEventListener('click', () => {
-    if (currentAudio) {
-        if (currentAudio.paused) {
-            currentAudio.play();
-        } else {
-            currentAudio.pause();
-        }
+    if (wavesurfer) {
+        wavesurfer.playPause();
     }
 });
 
