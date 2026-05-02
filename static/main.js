@@ -282,8 +282,8 @@ async function fetchTracks(isReload = false) {
     const dict = translations[currentLang];
     statusEl.textContent = currentLang === 'fr' ? 'Mise à jour...' : 'Updating...';
 
-    const exportCsv = document.querySelector('a[href*="/export/csv"]');
-    const exportTxt = document.querySelector('a[href*="/export/txt"]');
+    const exportCsv = document.getElementById('export-csv-btn');
+    const exportTxt = document.getElementById('export-txt-btn');
     
     let queryParams = `?start=${start}&end=${end}`;
     
@@ -305,21 +305,34 @@ async function fetchTracks(isReload = false) {
         }
     }
 
-    if (exportCsv) exportCsv.href = `/export/csv${queryParams}`;
-    if (exportTxt) exportTxt.href = `/export/txt${queryParams}`;
+    if (exportCsv) exportCsv.dataset.query = queryParams;
+    if (exportTxt) exportTxt.dataset.query = queryParams;
 
-    // Fix for Desktop app (PyWebView): 
-    // Force download links to open in external browser or use window.open
-    // because internal WKWebView doesn't handle downloads automatically.
-    [exportCsv, exportTxt].forEach(el => {
-        if (el && !el.dataset.listenerAttached) {
-            el.addEventListener('click', (e) => {
-                if (window.pywebview) {
-                    e.preventDefault();
-                    window.open(el.href, '_blank');
+    // Logique d'export : API native pour Desktop, lien classique pour Web
+    [ {el: exportCsv, format: 'csv'}, {el: exportTxt, format: 'txt'} ].forEach(item => {
+        if (item.el && !item.el.dataset.listenerAttached) {
+            item.el.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const qParams = item.el.dataset.query || '';
+                const url = `/export/${item.format}${qParams}`;
+                
+                if (window.pywebview && window.pywebview.api) {
+                    try {
+                        const res = await fetch(url);
+                        const content = await res.text();
+                        const filename = `shazylist_export.${item.format}`;
+                        const success = await window.pywebview.api.save_file(content, filename);
+                        if (success) {
+                            console.log(`Export ${item.format.toUpperCase()} natif réussi.`);
+                        }
+                    } catch (err) {
+                        console.error("Erreur lors de l'export natif :", err);
+                    }
+                } else {
+                    window.location.href = url;
                 }
             });
-            el.dataset.listenerAttached = "true";
+            item.el.dataset.listenerAttached = "true";
         }
     });
 

@@ -78,6 +78,26 @@ def check_permissions():
         logger.error(f"Accès à la base refusé ou erreur : {e}")
         return False
 
+class Api:
+    def set_window(self, window):
+        self.window = window
+
+    def save_file(self, content, filename):
+        if not hasattr(self, 'window') or not self.window:
+            return False
+        result = self.window.create_file_dialog(webview.SAVE_DIALOG, save_filename=filename)
+        if result:
+            file_path = result[0]
+            try:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                logger.info(f"Fichier exporté avec succès : {file_path}")
+                return True
+            except Exception as e:
+                logger.error(f"Erreur lors de l'export natif : {e}")
+                return False
+        return False
+
 if __name__ == '__main__':
     has_access = check_permissions()
     
@@ -92,14 +112,17 @@ if __name__ == '__main__':
     if not has_access:
         window_title += " (Accès requis)"
 
+    api = Api()
     window = webview.create_window(
         window_title, 
         "http://127.0.0.1:5050",
+        js_api=api,
         width=width,
         height=height,
         min_size=(800, 600),
         background_color='#000000'
     )
+    api.set_window(window)
 
     logger.info("Fenêtre Webview créée, démarrage de l'interface...")
     # Sauvegarde à la fermeture
